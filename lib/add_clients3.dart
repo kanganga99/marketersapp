@@ -1,0 +1,248 @@
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
+
+class Employee {
+  int id;
+  String businessName;
+  String contact;
+  String location;
+  String nature;
+  String acquisition;
+
+  Employee({
+    required this.id,
+    required this.businessName,
+    required this.contact,
+    required this.location,
+    required this.nature,
+    required this.acquisition,
+  });
+}
+
+Employee? editingEmployee; // Holds the employee being edited, if any
+
+class AddedClients extends StatefulWidget {
+  final bool isEditing;
+  final int id; // Add the id parameter
+
+  const AddedClients({
+    Key? key,
+    required this.isEditing,
+    required this.id,
+  }) : super(key: key);
+
+  @override
+  _AddedClientsState createState() => _AddedClientsState();
+}
+
+class _AddedClientsState extends State<AddedClients> {
+  TextEditingController businessnameController = TextEditingController();
+  TextEditingController contactController = TextEditingController();
+  TextEditingController locationController = TextEditingController();
+  TextEditingController natureController = TextEditingController();
+  TextEditingController acquisitionController = TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
+  bool isEditing = false; // Track if editing mode is active
+  late Employee editedEmployee; // Track the edited employee object
+
+  @override
+  void initState() {
+    super.initState();
+    // Check if editing mode is enabled
+    if (widget.isEditing) {
+      isEditing = true;
+      editedEmployee = Employee(
+        id: widget.id, // Assign the id from the widget parameter
+        businessName: '',
+        contact: '',
+        location: '',
+        nature: '',
+        acquisition: '',
+      );
+      fetchEmployeeData(); // Fetch the employee data for editing
+    }
+  }
+
+  void showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+    );
+  }
+
+  void fetchEmployeeData() async {
+    var url = Uri.parse('http://localhost/pesafy_marketers/get_clients.php');
+    final response = await http.post(url, body: {
+      'id': editedEmployee.id.toString(),
+    });
+
+    if (response.statusCode == 200) {
+      // Parse the response body to get the employee data
+      Map<String, dynamic> data = json.decode(response.body);
+
+      // Set the initial values of the text controllers with the employee data
+      setState(() {
+        editedEmployee = Employee(
+          id: editedEmployee.id,
+          businessName: data['business_name'],
+          contact: data['contact'],
+          location: data['location'],
+          nature: data['nature'],
+          acquisition: data['acquisition'],
+        );
+
+        businessnameController.text = editedEmployee.businessName;
+        contactController.text = editedEmployee.contact;
+        locationController.text = editedEmployee.location;
+        natureController.text = editedEmployee.nature;
+        acquisitionController.text = editedEmployee.acquisition;
+      });
+    } else {
+      showToast('Failed to fetch clients data');
+    }
+  }
+
+  void addOrUpdateEmployee() async {
+    var url;
+    if (isEditing) {
+      url = Uri.parse('http://localhost/pesafy_marketers/update_clients.php');
+    } else {
+      url = Uri.parse('http://localhost/pesafy_marketers/added_clients.php');
+    }
+
+    final response = await http.post(url, body: {
+      'id': isEditing ? editedEmployee.id.toString() : '',
+      'business_name': businessnameController.text,
+      'contact': contactController.text,
+      'location': locationController.text,
+      'nature': natureController.text,
+      'acquisition': acquisitionController.text,
+    });
+
+    if (response.statusCode == 200) {
+      showToast(isEditing ? 'Record updated' : 'Record added');
+      Navigator.pop(context);
+    } else {
+      showToast(isEditing ? 'Failed to update record' : 'Failed to add record');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(isEditing ? 'Edit Client' : 'Add Client'),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                TextFormField(
+                  keyboardType: TextInputType.text,
+                  controller: businessnameController,
+                  decoration: InputDecoration(
+                    labelText: 'Business Name',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.business),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter business name';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 20),
+                TextFormField(
+                  keyboardType: TextInputType.phone,
+                  controller: contactController,
+                  decoration: InputDecoration(
+                    labelText: 'Contact',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.contact_phone),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter phone number';
+                    } else if (value.length < 10) {
+                      return 'Phone number must have 10 characters';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 20),
+                TextFormField(
+                  keyboardType: TextInputType.text,
+                  controller: locationController,
+                  decoration: InputDecoration(
+                    labelText: 'Location',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.location_on),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter location';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 20),
+                TextFormField(
+                  keyboardType: TextInputType.text,
+                  controller: natureController,
+                  decoration: InputDecoration(
+                    labelText: 'Nature',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.nature),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter nature of the business';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 20),
+                TextFormField(
+                  keyboardType: TextInputType.text,
+                  controller: acquisitionController,
+                  decoration: InputDecoration(
+                    labelText: 'Acquisition',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.local_atm),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter acquisition';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 40),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      addOrUpdateEmployee();
+                    }
+                  },
+                  child: Text(isEditing ? 'Update' : 'Add'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
