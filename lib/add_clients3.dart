@@ -21,11 +21,11 @@ class Employee {
   });
 }
 
-Employee? editingEmployee; // Holds the employee being edited, if any
+Employee? editingEmployee;
 
 class AddedClients extends StatefulWidget {
   final bool isEditing;
-  final int id; // Add the id parameter
+  final int id;
 
   const AddedClients({
     Key? key,

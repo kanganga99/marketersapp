@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'add_clients3.dart';
 
 class ViewClients extends StatefulWidget {
@@ -79,20 +79,20 @@ class _ViewClientsState extends State<ViewClients> {
 
   Future<void> fetchEmployeeData() async {
     final response = await DatabaseHelper.getData();
-    print(response.body); // Print the API response
+    print(response.body);
     if (response.statusCode == 200) {
       dynamic responseData = jsonDecode(response.body);
       List<dynamic> data = responseData;
       if (data != null && data.isNotEmpty) {
         final List<Employee> fetchedEmployees = data.map<Employee>((item) {
-          final int id = int.parse(item['id']); // Parse id as an integer
+          final int id = int.parse(item['id']);
           final String businessName = item['business_name'];
           final String contact = item['contact'];
           final String location = item['location'];
           final String nature = item['nature'];
           final String acquisition = item['acquisition'];
           return Employee(
-            id: id, // Pass id as an argument
+            id: id,
             businessName: businessName,
             contact: contact,
             location: location,
@@ -105,22 +105,21 @@ class _ViewClientsState extends State<ViewClients> {
           employeeDataSource = EmployeeDataSource(
             employeeData: employees,
             deleteEmployee: deleteEmployee,
-            updateEmployee: updateEmployee, // Add updateEmployee callback
+            updateEmployee: updateEmployee,
             context: context,
           );
           isLoading = false;
         });
       } else {
         print('Invalid response data');
-        Fluttertoast.showToast(
-            msg: 'Invalid response data'); // Show error toast
+        Fluttertoast.showToast(msg: 'Invalid response data');
         setState(() {
           isLoading = false;
         });
       }
     } else {
-      print('Error fetching data: ${response.statusCode}');
-      Fluttertoast.showToast(msg: 'Error fetching data'); // Show error toast
+      print('Failed to fetch data');
+      Fluttertoast.showToast(msg: 'Failed to fetch data');
       setState(() {
         isLoading = false;
       });
@@ -131,7 +130,10 @@ class _ViewClientsState extends State<ViewClients> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Clients Details'),
+        title: Text(
+          'Clients Details',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         actions: [
           IconButton(
             onPressed: () {
@@ -149,200 +151,253 @@ class _ViewClientsState extends State<ViewClients> {
           ),
         ],
       ),
+      floatingActionButton: Padding(
+        padding: EdgeInsets.only(
+          bottom: 16.0,
+          left: 26.0,
+        ),
+        child: Align(
+          alignment: Alignment.bottomLeft,
+          child: SpeedDial(
+            animatedIcon: AnimatedIcons.menu_close,
+            animatedIconTheme: IconThemeData(size: 22.0),
+            child: Icon(Icons.logout_rounded),
+            backgroundColor: Colors.green,
+            overlayColor: Colors.black,
+            overlayOpacity: 0.5,
+            children: [
+              SpeedDialChild(
+                child: Icon(Icons.logout_rounded),
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                // label: 'Sign Out',
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('SIGN OUT?'),
+                        content: Text(
+                          'Are you sure you want to sign-out?',
+                        ),
+                        actions: [
+                          TextButton(
+                            child: Text('Cancel'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          TextButton(
+                            child: Text('Ok'),
+                            onPressed: () {
+                              Navigator.pushNamed(context, "/");
+                              // deleteEmployee();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              ),
+              SpeedDialChild(
+                child: Icon(Icons.refresh_rounded),
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                onTap: () {
+                  // ... your existing code
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
-          : SfDataGrid(
-              source: employeeDataSource,
-              columnWidthMode: ColumnWidthMode.fill,
-              columns: <GridColumn>[
-                GridColumn(
-                  columnName: 'id',
-                  label: Container(
-                    padding: EdgeInsets.all(8.0),
-                    alignment: Alignment.center,
-                    child: Text('ID'),
-                  ),
-                ),
-                GridColumn(
-                  columnName: 'business_name',
-                  label: Container(
-                    padding: EdgeInsets.all(8.0),
-                    alignment: Alignment.center,
-                    child: Text('Business Name'),
-                  ),
-                ),
-                GridColumn(
-                  columnName: 'contact',
-                  label: Container(
-                    padding: EdgeInsets.all(8.0),
-                    alignment: Alignment.center,
-                    child: Text('Contact'),
-                  ),
-                ),
-                GridColumn(
-                  columnName: 'location',
-                  label: Container(
-                    padding: EdgeInsets.all(8.0),
-                    alignment: Alignment.center,
-                    child: Text('Location'),
-                  ),
-                ),
-                GridColumn(
-                  columnName: 'nature',
-                  label: Container(
-                    padding: EdgeInsets.all(8.0),
-                    alignment: Alignment.center,
-                    child: Text('Nature'),
-                  ),
-                ),
-                GridColumn(
-                  columnName: 'acquisition',
-                  label: Container(
-                    padding: EdgeInsets.all(8.0),
-                    alignment: Alignment.center,
-                    child: Text('Acquisition'),
-                  ),
-                ),
-                GridColumn(
-                  columnName:
-                      'actions', // Unique column name for 'Actions' column
-                  label: Container(
-                    padding: EdgeInsets.all(8.0),
-                    alignment: Alignment.center,
-                    child: Text('Actions'),
-                  ),
-                ),
-              ],
-            ),
-    );
-  }
-}
-
-class EmployeeDataSource extends DataGridSource {
-  EmployeeDataSource({
-    required this.employeeData,
-    required this.deleteEmployee,
-    required this.updateEmployee,
-    required this.context,
-  }) {
-    buildDataGridRow();
-  }
-
-  final List<Employee> employeeData;
-  final List<DataGridRow> _dataGridRows = [];
-  final Function deleteEmployee;
-  final Function updateEmployee;
-  final BuildContext context;
-
-  void buildDataGridRow() {
-    _dataGridRows.clear();
-    for (var i = 0; i < employeeData.length; i++) {
-      final employee = employeeData[i];
-      _dataGridRows.add(
-        DataGridRow(cells: [
-          DataGridCell<int>(columnName: 'id', value: employee.id),
-          DataGridCell<String>(
-              columnName: 'business_name', value: employee.businessName),
-          DataGridCell<String>(columnName: 'contact', value: employee.contact),
-          DataGridCell<String>(
-              columnName: 'location', value: employee.location),
-          DataGridCell<String>(columnName: 'nature', value: employee.nature),
-          DataGridCell<String>(
-              columnName: 'acquisition', value: employee.acquisition),
-          DataGridCell<String>(
-            columnName: 'Actions',
-            value: '',
-          ),
-        ]),
-      );
-    }
-  }
-
-  @override
-  List<DataGridRow> get rows => _dataGridRows;
-  @override
-  @override
-  @override
-  DataGridRowAdapter buildRow(DataGridRow row) {
-    final cells = row.getCells();
-    final actionCellIndex = cells.length - 1; // Index of the 'Actions' cell
-
-    final employeeId = cells[0].value as int; // Access the employee id
-
-    final employee = employeeData.firstWhere((emp) => emp.id == employeeId);
-
-    return DataGridRowAdapter(
-      cells: cells.map<Widget>((dataGridCell) {
-        final columnName = dataGridCell.columnName;
-        final cellValue = dataGridCell.value.toString();
-
-        if (columnName == 'Actions') {
-          return Container(
-            alignment: Alignment.center,
-            padding: EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AddedClients(
-                          isEditing: true,
-                          id: employeeId
+          : ListView.builder(
+              itemCount: employees.length,
+              itemBuilder: (context, index) {
+                final employee = employees[index];
+                final heroTag =
+                    'employee_hero_${employee.id}'; // Unique hero tag
+                return Stack(
+                  children: [
+                    Card(
+                      margin: EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Hero(
+                            tag: heroTag,
+                            child: Image.asset(
+                              '../images/logoi.jpeg',
+                              height: 100,
+                              width: 100,
+                            ),
+                          ),
+                          ListTile(
+                            title: Center(
+                              child: Text(
+                                'ID: ${employee.id}',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: 8.0),
+                                Center(
+                                  child: Text(
+                                    'Business Name: ${employee.businessName}',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                Center(
+                                  child: Text(
+                                    'Location: ${employee.location}',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                Center(
+                                  child: Text(
+                                    'Acquisition: ${employee.acquisition}',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          // Padding(
+                          //   padding: EdgeInsets.only(bottom: 8.0),
+                          //   child: Row(
+                          //     children: [
+                          //       Expanded(
+                          //         child: Row(
+                          //           children: [
+                          //             Expanded(
+                          //               child: FloatingActionButton.extended(
+                          //                 onPressed: () {
+                          //                   showDialog(
+                          //                     context: context,
+                          //                     builder: (BuildContext context) {
+                          //                       return AlertDialog(
+                          //                         title: Text(
+                          //                             'Delete Confirmation'),
+                          //                         content: Text(
+                          //                           'Are you sure you want to delete this record?',
+                          //                         ),
+                          //                         actions: [
+                          //                           TextButton(
+                          //                             child: Text('Cancel'),
+                          //                             onPressed: () {
+                          //                               Navigator.of(context)
+                          //                                   .pop();
+                          //                             },
+                          //                           ),
+                          //                           TextButton(
+                          //                             child: Text('Delete'),
+                          //                             onPressed: () {
+                          //                               Navigator.of(context)
+                          //                                   .pop();
+                          //                               deleteEmployee(
+                          //                                   employee);
+                          //                             },
+                          //                           ),
+                          //                         ],
+                          //                       );
+                          //                     },
+                          //                   );
+                          //                 },
+                          //                 label: Row(
+                          //                   children: [
+                          //                     Text(
+                          //                       'Delete Client',
+                          //                       style: TextStyle(
+                          //                         fontSize: 15,
+                          //                         fontWeight: FontWeight.bold,
+                          //                         color: Colors.black,
+                          //                       ),
+                          //                     ),
+                          //                     Icon(
+                          //                       Icons.delete,
+                          //                       size: 25,
+                          //                       color: Color.fromARGB(
+                          //                           255, 53, 49, 49),
+                          //                     ),
+                          //                   ],
+                          //                 ),
+                          //                 backgroundColor: Colors.white,
+                          //               ),
+                          //             ),
+                          //           ],
+                          //         ),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
+                        ],
+                      ),
+                    ),
+                    Positioned(
+                      top: 8.0,
+                      left: 8.0,
+                      child: Hero(
+                        tag:
+                            '${heroTag}_edit_button', // Unique hero tag for edit button
+                        child: IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AddedClients(
+                                  isEditing: true,
+                                  id: employee.id,
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ),
-                    );
-                  },
-                ),
-                IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('Delete Confirmation'),
-                          content: Text(
-                              'Are you sure you want to delete this record?'),
-                          actions: [
-                            TextButton(
-                              child: Text('Cancel'),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                            TextButton(
-                              child: Text('Delete'),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                                deleteEmployee(employee);
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                ),
-              ],
+                    ),
+                  ],
+                );
+              },
             ),
-          );
-        } else {
-          return Container(
-            alignment: Alignment.center,
-            padding: EdgeInsets.all(8.0),
-            child: Text(cellValue),
-          );
-        }
-      }).toList(),
     );
   }
 }
 
 class Employee {
+  final int id;
+  final String businessName;
+  final String contact;
+  final String location;
+  final String nature;
+  final String acquisition;
+
   Employee({
     required this.id,
     required this.businessName,
@@ -351,18 +406,98 @@ class Employee {
     required this.nature,
     required this.acquisition,
   });
+}
 
-  final int id;
-  final String businessName;
-  final String contact;
-  final String location;
-  final String nature;
-  final String acquisition;
+class EmployeeDataSource extends DataTableSource {
+  final List<Employee> employeeData;
+  final Function(Employee) deleteEmployee;
+  final Function(Employee) updateEmployee;
+  final BuildContext context;
+
+  EmployeeDataSource({
+    required this.employeeData,
+    required this.deleteEmployee,
+    required this.updateEmployee,
+    required this.context,
+  });
+
+  @override
+  DataRow getRow(int index) {
+    final employee = employeeData[index];
+    return DataRow(
+      cells: [
+        DataCell(Text('ID: ${employee.id}')),
+        DataCell(Text(employee.businessName)),
+        DataCell(Text(employee.contact)),
+        DataCell(Text(employee.location)),
+        DataCell(Text(employee.nature)),
+        DataCell(Text(employee.acquisition)),
+        DataCell(
+          IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddedClients(
+                    isEditing: true,
+                    id: employee.id,
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        DataCell(
+          IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Delete Confirmation'),
+                    content:
+                        Text('Are you sure you want to delete this record?'),
+                    actions: [
+                      TextButton(
+                        child: Text('Cancel'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      TextButton(
+                        child: Text('Delete'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          deleteEmployee(employee);
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  int get rowCount => employeeData.length;
+
+  @override
+  bool get isRowCountApproximate => false;
+
+  @override
+  int get selectedRowCount => 0;
 }
 
 class DatabaseHelper {
   static Future<http.Response> getData() async {
-    const url = 'http://localhost/pesafy_marketers/view_clients.php';
-    return await http.get(Uri.parse(url));
+    String uri = "http://localhost/pesafy_marketers/view_clients.php";
+    var res = await http.get(Uri.parse(uri));
+    return res;
   }
 }

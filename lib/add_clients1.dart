@@ -39,15 +39,14 @@ class _AddedClientsState extends State<AddedClients> {
   TextEditingController natureController = TextEditingController();
   TextEditingController acquisitionController = TextEditingController();
 
-  final _formKey = GlobalKey<FormState>(); // Key for the form
+  final _formKey = GlobalKey<FormState>();
 
-  bool isEditing = false; // Track if editing mode is active
+  bool isEditing = false;
   late Employee editedEmployee; // Track the edited employee object
 
   @override
   void initState() {
     super.initState();
-    // Check if editing mode is enabled
     if (widget.isEditing) {
       isEditing = true;
       fetchEmployeeData(); // Fetch the employee data for editing
@@ -73,7 +72,6 @@ class _AddedClientsState extends State<AddedClients> {
     if (response.statusCode == 200) {
       // Parse the response body to get the employee data
       Map<String, dynamic> data = json.decode(response.body);
-
       // Set the initial values of the text controllers with the employee data
       setState(() {
         editedEmployee = Employee(

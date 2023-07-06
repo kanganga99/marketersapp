@@ -4,8 +4,7 @@ import 'sign_up.dart';
 import 'add_clients1.dart';
 import 'add_clients3.dart';
 import 'view_clients.dart';
-import 'employees.dart';  
-
+import 'employees.dart';
 
 void main() {
   runApp(
@@ -25,16 +24,3 @@ void main() {
     ),
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

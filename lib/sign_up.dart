@@ -31,7 +31,8 @@ class _SignUpState extends State<SignUp> {
 
   Future<bool> checkEmailExists(String email) async {
     final response = await http.get(
-      Uri.parse('http://localhost/pesafy_marketers/check_email.php?email=$email'),
+      Uri.parse(
+          'http://localhost/pesafy_marketers/check_email.php?email=$email'),
     );
     if (response.statusCode == 200) {
       final String result = response.body;
