@@ -23,6 +23,13 @@ class _ViewClientsState extends State<ViewClients> {
     fetchEmployeeData();
   }
 
+  Future<void> refreshData() async {
+    setState(() {
+      isLoading = true;
+    });
+    await fetchEmployeeData();
+  }
+
   Future<void> deleteEmployee(Employee employee) async {
     try {
       String uri = "http://localhost/pesafy_marketers/delete_clients.php";
@@ -64,7 +71,7 @@ class _ViewClientsState extends State<ViewClients> {
         "contact": employee.contact,
         "location": employee.location,
         "nature": employee.nature,
-        "acquisition": employee.acquisition
+        "acquisition": employee.acquisition,
       });
       var response = jsonDecode(res.body);
       if (response["success"] == "true") {
@@ -130,9 +137,15 @@ class _ViewClientsState extends State<ViewClients> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Clients Details',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        automaticallyImplyLeading: false, // Remove the back icon
+        titleSpacing: 10, // Remove the default padding around the title
+        title: Row(
+          children: [
+            Text(
+              'Clients Details',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
         actions: [
           IconButton(
@@ -209,7 +222,8 @@ class _ViewClientsState extends State<ViewClients> {
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 onTap: () {
-                  // ... your existing code
+                  onTap:
+                  refreshData();
                 },
               ),
             ],
