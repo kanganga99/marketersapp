@@ -19,7 +19,6 @@ class _EmployeesViewState extends State<EmployeesView> {
         GridColumn(columnName: 'location', label: Text('Location')),
         GridColumn(columnName: 'nature', label: Text('Nature')),
         GridColumn(columnName: 'acquisition', label: Text('Acquisition')),
-        
       ];
 
   Future<EmployeeDataSource> generateEmployeeList() async {
@@ -36,9 +35,6 @@ class _EmployeesViewState extends State<EmployeesView> {
       return EmployeeDataSource([]);
     }
   }
-
-//var uri = Uri.https('my.apiurl.com', 'my/api/endopoint/path');
-//var response = await client.get(uri);
 
   @override
   Widget build(BuildContext context) {
@@ -88,11 +84,13 @@ class EmployeeDataSource extends DataGridSource {
         .map<DataGridRow>(
           (e) => DataGridRow(cells: [
             DataGridCell<int>(columnName: 'id', value: e.id),
-            DataGridCell<String>(columnName: 'businessname', value: e.business_name),
+            DataGridCell<String>(
+                columnName: 'businessname', value: e.business_name),
             DataGridCell<String>(columnName: 'contact', value: e.contact),
             DataGridCell<String>(columnName: 'location', value: e.location),
             DataGridCell<String>(columnName: 'nature', value: e.nature),
-            DataGridCell<String>(columnName: 'acquisition', value: e.acquisition),
+            DataGridCell<String>(
+                columnName: 'acquisition', value: e.acquisition),
           ]),
         )
         .toList();
@@ -131,23 +129,23 @@ class Employee {
   String nature;
   String acquisition;
 
-  Employee(
-      {required this.id,
-      required this.business_name,
-      required this.contact,
-      required this.location,
-      required this.nature,
-      required this.acquisition,
-      });
+  Employee({
+    required this.id,
+    required this.business_name,
+    required this.contact,
+    required this.location,
+    required this.nature,
+    required this.acquisition,
+  });
 
   factory Employee.fromJson(Map<String, dynamic> json) {
     return Employee(
-        id: int.parse(json['id']),
-        business_name: json['business_name'] as String,
-        contact: json['contact'] as String,
-        location: json['location'] as String,
-        nature: json['nature'] as String,
-        acquisition: json['acquisition'] as String,
-        );
+      id: int.parse(json['id']),
+      business_name: json['business_name'] as String,
+      contact: json['contact'] as String,
+      location: json['location'] as String,
+      nature: json['nature'] as String,
+      acquisition: json['acquisition'] as String,
+    );
   }
 }

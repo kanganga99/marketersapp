@@ -42,7 +42,8 @@ class _AddedClientsState extends State<AddedClients> {
   TextEditingController contactController = TextEditingController();
   TextEditingController locationController = TextEditingController();
   TextEditingController natureController = TextEditingController();
-  TextEditingController acquisitionController = TextEditingController();
+  List<String> acquisitionOptions = ['First Time', 'On boarded', 'Not Yet'];
+  String selectedAcquisition = 'First Time';
 
   final _formKey = GlobalKey<FormState>();
   bool isEditing = false; // Track if editing mode is active
@@ -85,7 +86,6 @@ class _AddedClientsState extends State<AddedClients> {
     if (response.statusCode == 200) {
       // Parse the response body to get the employee data
       Map<String, dynamic> data = json.decode(response.body);
-
       // Set the initial values of the text controllers with the employee data
       setState(() {
         editedEmployee = Employee(
@@ -101,7 +101,7 @@ class _AddedClientsState extends State<AddedClients> {
         contactController.text = editedEmployee.contact;
         locationController.text = editedEmployee.location;
         natureController.text = editedEmployee.nature;
-        acquisitionController.text = editedEmployee.acquisition;
+        selectedAcquisition = editedEmployee.acquisition;
       });
     } else {
       showToast('Failed to fetch clients data');
@@ -122,7 +122,7 @@ class _AddedClientsState extends State<AddedClients> {
       'contact': contactController.text,
       'location': locationController.text,
       'nature': natureController.text,
-      'acquisition': acquisitionController.text,
+      'acquisition': selectedAcquisition,
     });
 
     if (response.statusCode == 200) {
@@ -208,23 +208,33 @@ class _AddedClientsState extends State<AddedClients> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter nature of the business';
+                      return "Please enter nature";
                     }
                     return null;
                   },
                 ),
                 SizedBox(height: 20),
-                TextFormField(
-                  keyboardType: TextInputType.text,
-                  controller: acquisitionController,
+                DropdownButtonFormField<String>(
+                  value: selectedAcquisition,
+                  items: acquisitionOptions.map((option) {
+                    return DropdownMenuItem<String>(
+                      value: option,
+                      child: Text(option),
+                    );
+                  }).toList(),
                   decoration: InputDecoration(
                     labelText: 'Acquisition',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.local_atm),
                   ),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedAcquisition = value!;
+                    });
+                  },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter acquisition';
+                      return 'Please select acquisition';
                     }
                     return null;
                   },

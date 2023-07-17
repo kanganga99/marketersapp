@@ -138,14 +138,10 @@ class _ViewClientsState extends State<ViewClients> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false, // Remove the back icon
-        titleSpacing: 10, // Remove the default padding around the title
-        title: Row(
-          children: [
-            Text(
-              'Clients Details',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ],
+        titleSpacing: 15, // Remove the default padding around the title
+        title: Text(
+          'Clients Details',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         actions: [
           IconButton(
@@ -236,7 +232,7 @@ class _ViewClientsState extends State<ViewClients> {
               itemCount: employees.length,
               itemBuilder: (context, index) {
                 final employee = employees[index];
-                final heroTag =
+                final heroTag = ''
                     'employee_hero_${employee.id}'; // Unique hero tag
                 return Stack(
                   children: [
@@ -280,13 +276,12 @@ class _ViewClientsState extends State<ViewClients> {
                                 ),
                                 Center(
                                   child: Text(
-                                    'Location: ${employee.location}',
+                                    'Contact: ${employee.contact}',
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black,
                                     ),
-                                    textAlign: TextAlign.center,
                                   ),
                                 ),
                                 Center(
@@ -303,6 +298,52 @@ class _ViewClientsState extends State<ViewClients> {
                               ],
                             ),
                           ),
+                          // TextButton(
+                          //   onPressed: () {
+                          //     showDialog(
+                          //       context: context,
+                          //       builder: (BuildContext context) {
+                          //         return AlertDialog(
+                          //           title: Text(
+                          //             'Delete Confirmation',
+                          //             style: TextStyle(
+                          //               fontWeight: FontWeight.bold,
+                          //               color: Colors.black,
+                          //               fontSize: 15,
+                          //             ),
+                          //           ),
+                          //           content: Text(
+                          //             'Are you sure you want to delete this client?',
+                          //           ),
+                          //           actions: [
+                          //             TextButton(
+                          //               child: Text('Cancel'),
+                          //               onPressed: () {
+                          //                 Navigator.of(context).pop();
+                          //               },
+                          //             ),
+                          //             TextButton(
+                          //               child: Text(
+                          //                 'Delete',
+                          //                 style: TextStyle(color: Colors.red),
+                          //               ),
+                          //               onPressed: () {
+                          //                 Navigator.of(context).pop();
+                          //                 deleteEmployee(employee);
+                          //               },
+                          //             ),
+                          //           ],
+                          //         );
+                          //       },
+                          //     );
+                          //   },
+                          //   style: ElevatedButton.styleFrom(
+                          //     backgroundColor: Colors.white,
+                          //     foregroundColor: Colors.black,
+                          //     fixedSize: Size(500, 20),
+                          //   ),
+                          //   child: Text("Delete"),
+                          // ),
                           // Padding(
                           //   padding: EdgeInsets.only(bottom: 8.0),
                           //   child: Row(
@@ -318,9 +359,16 @@ class _ViewClientsState extends State<ViewClients> {
                           //                     builder: (BuildContext context) {
                           //                       return AlertDialog(
                           //                         title: Text(
-                          //                             'Delete Confirmation'),
+                          //                           'Delete Confirmation',
+                          //                           style: TextStyle(
+                          //                             fontWeight:
+                          //                                 FontWeight.bold,
+                          //                             color: Colors.black,
+                          //                             fontSize: 15,
+                          //                           ),
+                          //                         ),
                           //                         content: Text(
-                          //                           'Are you sure you want to delete this record?',
+                          //                           'Are you sure you want to delete this client?',
                           //                         ),
                           //                         actions: [
                           //                           TextButton(
@@ -331,7 +379,11 @@ class _ViewClientsState extends State<ViewClients> {
                           //                             },
                           //                           ),
                           //                           TextButton(
-                          //                             child: Text('Delete'),
+                          //                             child: Text(
+                          //                               'Delete',
+                          //                               style: TextStyle(
+                          //                                   color: Colors.red),
+                          //                             ),
                           //                             onPressed: () {
                           //                               Navigator.of(context)
                           //                                   .pop();
