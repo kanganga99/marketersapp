@@ -16,12 +16,12 @@ class _RegisterState extends State<Register> {
   TextEditingController pass = TextEditingController();
 
   Future<void> register() async {
-    var url = "http://localhost/pesafy_marketers/sign_up.php";
+    var url = "https://api.pesafy.africa/marketers/sign_up.php";
     var response = await http.post(Uri.parse(url), body: {
       "username": user.text,
       "email": email.text,
-      "phone" : phone.text,
-      "pass" : pass.text,
+      "phone": phone.text,
+      "pass": pass.text,
     });
     var data = json.decode(response.body);
     if (data == "Error") {
@@ -42,7 +42,7 @@ class _RegisterState extends State<Register> {
         backgroundColor: Colors.green,
         textColor: Colors.white,
       );
-      Navigator.pushNamed(context, "/second");
+      Navigator.pushNamed(context, "/register");
     }
   }
 
@@ -50,7 +50,7 @@ class _RegisterState extends State<Register> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Login SignUp',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
@@ -61,8 +61,8 @@ class _RegisterState extends State<Register> {
           color: Colors.amber,
           child: Column(
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Text(
                   'Register',
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
@@ -73,7 +73,7 @@ class _RegisterState extends State<Register> {
                 child: TextField(
                   decoration: InputDecoration(
                     labelText: 'Username',
-                    prefixIcon: Icon(Icons.person),
+                    prefixIcon: const Icon(Icons.person),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -85,23 +85,23 @@ class _RegisterState extends State<Register> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
                   // obscureText: true,
-                    controller: email,
-                    decoration: InputDecoration(
+                  controller: email,
+                  decoration: InputDecoration(
                     labelText: 'Email',
-                    prefixIcon: Icon(Icons.lock),
+                    prefixIcon: const Icon(Icons.lock),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
                 ),
               ),
-                Padding(
+              Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
                   // obscureText: true,
                   decoration: InputDecoration(
                     labelText: 'Phone',
-                    prefixIcon: Icon(Icons.lock),
+                    prefixIcon: const Icon(Icons.lock),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -109,13 +109,13 @@ class _RegisterState extends State<Register> {
                   controller: phone,
                 ),
               ),
-                Padding(
+              Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
                   obscureText: true,
                   decoration: InputDecoration(
                     labelText: 'Password',
-                    prefixIcon: Icon(Icons.lock),
+                    prefixIcon: const Icon(Icons.lock),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -128,7 +128,7 @@ class _RegisterState extends State<Register> {
                   Expanded(
                     child: MaterialButton(
                       color: Colors.pink,
-                      child: Text(
+                      child: const Text(
                         'Register',
                         style: TextStyle(
                           fontSize: 20,

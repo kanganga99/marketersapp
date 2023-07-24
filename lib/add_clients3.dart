@@ -42,8 +42,13 @@ class _AddedClientsState extends State<AddedClients> {
   TextEditingController contactController = TextEditingController();
   TextEditingController locationController = TextEditingController();
   TextEditingController natureController = TextEditingController();
-  List<String> acquisitionOptions = ['First Time', 'On boarded', 'Not Yet'];
-  String selectedAcquisition = 'First Time';
+  List<String> acquisitionOptions = [
+    'First Time',
+    'On boarded',
+    'Not Yet',
+    'Visit'
+  ];
+  String selectedAcquisition = "First Time";
 
   final _formKey = GlobalKey<FormState>();
   bool isEditing = false; // Track if editing mode is active
@@ -72,13 +77,13 @@ class _AddedClientsState extends State<AddedClients> {
       msg: message,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
-      backgroundColor: Colors.red,
+      backgroundColor: Colors.green[600],
       textColor: Colors.white,
     );
   }
 
   void fetchEmployeeData() async {
-    var url = Uri.parse('http://localhost/pesafy_marketers/get_clients.php');
+    var url = Uri.parse('https://api.pesafy.africa/marketers/get_clients.php');
     final response = await http.post(url, body: {
       'id': editedEmployee.id.toString(),
     });
@@ -111,9 +116,9 @@ class _AddedClientsState extends State<AddedClients> {
   void addOrUpdateEmployee() async {
     var url;
     if (isEditing) {
-      url = Uri.parse('http://localhost/pesafy_marketers/update_clients.php');
+      url = Uri.parse('https://api.pesafy.africa/marketers/update_clients.php');
     } else {
-      url = Uri.parse('http://localhost/pesafy_marketers/added_clients.php');
+      url = Uri.parse('https://api.pesafy.africa/marketers/added_clients.php');
     }
 
     final response = await http.post(url, body: {
@@ -142,7 +147,7 @@ class _AddedClientsState extends State<AddedClients> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
           child: Form(
             key: _formKey,
             child: Column(
@@ -151,7 +156,7 @@ class _AddedClientsState extends State<AddedClients> {
                 TextFormField(
                   keyboardType: TextInputType.text,
                   controller: businessnameController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Business Name',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.business),
@@ -163,11 +168,11 @@ class _AddedClientsState extends State<AddedClients> {
                     return null;
                   },
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 TextFormField(
                   keyboardType: TextInputType.phone,
                   controller: contactController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Contact',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.contact_phone),
@@ -181,11 +186,11 @@ class _AddedClientsState extends State<AddedClients> {
                     return null;
                   },
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 TextFormField(
                   keyboardType: TextInputType.text,
                   controller: locationController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Location',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.location_on),
@@ -197,23 +202,23 @@ class _AddedClientsState extends State<AddedClients> {
                     return null;
                   },
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 TextFormField(
                   keyboardType: TextInputType.text,
                   controller: natureController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Nature',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.nature),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Please enter nature";
+                      return "Please enter nature of the business";
                     }
                     return null;
                   },
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 DropdownButtonFormField<String>(
                   value: selectedAcquisition,
                   items: acquisitionOptions.map((option) {
@@ -222,7 +227,7 @@ class _AddedClientsState extends State<AddedClients> {
                       child: Text(option),
                     );
                   }).toList(),
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Acquisition',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.local_atm),
@@ -239,7 +244,7 @@ class _AddedClientsState extends State<AddedClients> {
                     return null;
                   },
                 ),
-                SizedBox(height: 40),
+                const SizedBox(height: 40),
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {

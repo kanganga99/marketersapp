@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -30,14 +29,14 @@ class _FormScreenState extends State<FormScreen> {
           fontSize: 16.0,
         );
       } else {
-        var url = Uri.parse('http://localhost/pesafy_marketers/login.php');
+        var url = Uri.parse('https://api.pesafy.africa/marketers/login.php');
         var response = await http.post(url, body: {
           "email": email.text,
           "password": password.text,
         });
         var data = json.decode(response.body);
         if (data == "success") {
-          Navigator.pushNamed(context, "/fourth");
+          Navigator.pushNamed(context, "/clients");
           email.clear();
           password.clear();
         } else {
@@ -59,12 +58,12 @@ class _FormScreenState extends State<FormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pesafy Marketers'),
+        title: const Text('Pesafy Marketers'),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 60),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 60),
           child: Form(
             key: _formFieldKey,
             child: Column(
@@ -72,17 +71,17 @@ class _FormScreenState extends State<FormScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  '../images/login.jpeg',
+                  'images/login.jpeg',
                   height: 200,
                   width: 200,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 50,
                 ),
                 TextFormField(
                   keyboardType: TextInputType.emailAddress,
                   controller: email,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Email',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.email),
@@ -96,7 +95,7 @@ class _FormScreenState extends State<FormScreen> {
                     return null;
                   },
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 TextFormField(
@@ -105,8 +104,8 @@ class _FormScreenState extends State<FormScreen> {
                   obscureText: passToggle,
                   decoration: InputDecoration(
                     labelText: 'Password',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.lock),
+                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.lock),
                     suffixIcon: InkWell(
                       onTap: () {
                         setState(() {
@@ -119,7 +118,7 @@ class _FormScreenState extends State<FormScreen> {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Container(
@@ -130,7 +129,7 @@ class _FormScreenState extends State<FormScreen> {
                   ),
                   child: MaterialButton(
                     color: Colors.green[100],
-                    child: Text(
+                    child: const Text(
                       'Login',
                       style: TextStyle(
                         fontSize: 20,
@@ -145,13 +144,13 @@ class _FormScreenState extends State<FormScreen> {
                     },
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       'Not a member?',
                       style: TextStyle(
                         fontSize: 17,
@@ -159,9 +158,9 @@ class _FormScreenState extends State<FormScreen> {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, "/second");
+                        Navigator.pushNamed(context, "/register");
                       },
-                      child: Text(
+                      child: const Text(
                         'Sign Up',
                         style: TextStyle(
                           fontSize: 18,

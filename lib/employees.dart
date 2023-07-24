@@ -13,12 +13,12 @@ class EmployeesView extends StatefulWidget {
 class _EmployeesViewState extends State<EmployeesView> {
   EmployeeDataSource employeeDataSource = EmployeeDataSource([]);
   get _column => <GridColumn>[
-        GridColumn(columnName: 'id', label: Text('ID')),
-        GridColumn(columnName: 'business_name', label: Text('Business Name')),
-        GridColumn(columnName: 'contact', label: Text('Contact')),
-        GridColumn(columnName: 'location', label: Text('Location')),
-        GridColumn(columnName: 'nature', label: Text('Nature')),
-        GridColumn(columnName: 'acquisition', label: Text('Acquisition')),
+        GridColumn(columnName: 'id', label: const Text('ID')),
+        GridColumn(columnName: 'business_name', label: const Text('Business Name')),
+        GridColumn(columnName: 'contact', label: const Text('Contact')),
+        GridColumn(columnName: 'location', label: const Text('Location')),
+        GridColumn(columnName: 'nature', label: const Text('Nature')),
+        GridColumn(columnName: 'acquisition', label: const Text('Acquisition')),
       ];
 
   Future<EmployeeDataSource> generateEmployeeList() async {
@@ -40,7 +40,7 @@ class _EmployeesViewState extends State<EmployeesView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Clients Details'),
+        title: const Text('Clients Details'),
         actions: [
           IconButton(
             onPressed: () {
@@ -61,7 +61,7 @@ class _EmployeesViewState extends State<EmployeesView> {
                     source: employeeDataSource,
                     columnWidthMode: ColumnWidthMode.fill,
                     columns: _column)
-                : Center(
+                : const Center(
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
                       value: 0.8,
@@ -107,7 +107,7 @@ class EmployeeDataSource extends DataGridSource {
       cells: row.getCells().map<Widget>((e) {
         return Container(
           alignment: Alignment.center,
-          padding: EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8.0),
           child: Text(
             e.value.toString(),
           ),
@@ -123,6 +123,7 @@ class EmployeeDataSource extends DataGridSource {
 
 class Employee {
   int id;
+  // ignore: non_constant_identifier_names
   String business_name;
   String contact;
   String location;
@@ -131,6 +132,7 @@ class Employee {
 
   Employee({
     required this.id,
+    // ignore: non_constant_identifier_names
     required this.business_name,
     required this.contact,
     required this.location,

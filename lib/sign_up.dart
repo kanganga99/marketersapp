@@ -32,7 +32,7 @@ class _SignUpState extends State<SignUp> {
   Future<bool> checkEmailExists(String email) async {
     final response = await http.get(
       Uri.parse(
-          'http://localhost/pesafy_marketers/check_email.php?email=$email'),
+          'https://api.pesafy.africa/marketers/check_email.php?email=$email'),
     );
     if (response.statusCode == 200) {
       final String result = response.body;
@@ -49,7 +49,7 @@ class _SignUpState extends State<SignUp> {
     String password,
   ) async {
     final response = await http.post(
-      Uri.parse('http://localhost/pesafy_marketers/sign_up.php'),
+      Uri.parse('https://api.pesafy.africa/marketers/sign_up.php'),
       headers: <String, String>{
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       },
@@ -85,7 +85,7 @@ class _SignUpState extends State<SignUp> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  '../images/login.jpeg',
+                  'images/login.jpeg',
                   height: 100,
                   width: 100,
                 ),
@@ -102,7 +102,7 @@ class _SignUpState extends State<SignUp> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "Please enter username";
-                      } else if (value.length < 8) {
+                      } else if (value.length < 3) {
                         return "Username must have 8 or more characters";
                       }
                       return null;
@@ -157,7 +157,7 @@ class _SignUpState extends State<SignUp> {
                     obscureText: passToggle,
                     decoration: InputDecoration(
                       labelText: 'Password',
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                       prefixIcon: const Icon(Icons.lock),
                       suffixIcon: InkWell(
                         onTap: () {
@@ -188,7 +188,7 @@ class _SignUpState extends State<SignUp> {
                     controller: confirmPassController,
                     decoration: InputDecoration(
                       labelText: 'Confirm Password',
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                       prefixIcon: const Icon(Icons.lock),
                       suffixIcon: InkWell(
                         onTap: () {
@@ -229,7 +229,7 @@ class _SignUpState extends State<SignUp> {
                           showDialog(
                             context: context,
                             builder: (context) => AlertDialog(
-                              title: Text('Email Already Exists'),
+                              title: const Text('Email Already Exists'),
                               content: Text(
                                   'The email $email is already registered.'),
                               actions: [
@@ -237,7 +237,7 @@ class _SignUpState extends State<SignUp> {
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
-                                  child: Text('OK'),
+                                  child: const Text('OK'),
                                 ),
                               ],
                             ),
@@ -272,8 +272,10 @@ class _SignUpState extends State<SignUp> {
                         color: Colors.green,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Center(
+                      child: const Center(
                         child: Text(
+
+                          
                           'Register',
                           style: TextStyle(
                             color: Colors.white,
@@ -289,7 +291,7 @@ class _SignUpState extends State<SignUp> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       'Already a Member?',
                       style: TextStyle(
                         fontSize: 17,
@@ -299,7 +301,7 @@ class _SignUpState extends State<SignUp> {
                       onPressed: () {
                         Navigator.pushNamed(context, "/");
                       },
-                      child: Text(
+                      child: const Text(
                         'Login',
                         style: TextStyle(
                           fontSize: 18,

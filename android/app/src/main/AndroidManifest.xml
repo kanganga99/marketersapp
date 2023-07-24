@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.pesafy_marketer">
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="pesafy_marketers"
         android:name="${applicationName}"

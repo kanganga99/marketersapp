@@ -39,7 +39,7 @@ class _LoginState extends State<Login> {
     final response = await loginUser(email, password);
     if (response.statusCode == 200) {
       // Login successful
-      Navigator.pushNamed(context, "/fourth");
+      Navigator.pushNamed(context, "/clients");
 
       // Clear the text fields
       emailController.clear();
@@ -85,12 +85,12 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pesafy Marketers'),
+        title: const Text('Pesafy Marketers'),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 60),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 60),
           child: Form(
             key: _formKey,
             child: Column(
@@ -102,13 +102,13 @@ class _LoginState extends State<Login> {
                   height: 200,
                   width: 200,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 50,
                 ),
                 TextFormField(
                   keyboardType: TextInputType.emailAddress,
                   controller: emailController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Email',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.email),
@@ -122,7 +122,7 @@ class _LoginState extends State<Login> {
                     return null;
                   },
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 TextFormField(
@@ -131,8 +131,8 @@ class _LoginState extends State<Login> {
                   obscureText: passToggle,
                   decoration: InputDecoration(
                     labelText: 'Password',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.lock),
+                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.lock),
                     suffixIcon: InkWell(
                       onTap: () {
                         setState(() {
@@ -151,7 +151,7 @@ class _LoginState extends State<Login> {
                     return null;
                   },
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Container(
@@ -162,7 +162,7 @@ class _LoginState extends State<Login> {
                   ),
                   child: MaterialButton(
                     color: Colors.green[100],
-                    child: Text(
+                    child: const Text(
                       'Login',
                       style: TextStyle(
                         fontSize: 20,
@@ -177,13 +177,13 @@ class _LoginState extends State<Login> {
                     },
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       'Not a member?',
                       style: TextStyle(
                         fontSize: 17,
@@ -191,9 +191,9 @@ class _LoginState extends State<Login> {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, "/second");
+                        Navigator.pushNamed(context, "/register");
                       },
-                      child: Text(
+                      child: const Text(
                         'Register',
                         style: TextStyle(
                           fontSize: 18,

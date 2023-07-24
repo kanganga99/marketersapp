@@ -25,7 +25,7 @@ class _ViewClientsState extends State<ViewClients> {
 
   Future<void> deleteEmployee(Employee employee) async {
     try {
-      String uri = "http://localhost/pesafy_marketers/delete_clients.php";
+      String uri = "https://api.pesafy.africa/marketers/delete_clients.php";
       var res =
           await http.post(Uri.parse(uri), body: {"id": employee.id.toString()});
       var response = jsonDecode(res.body);
@@ -57,7 +57,7 @@ class _ViewClientsState extends State<ViewClients> {
 
   Future<void> updateEmployee(Employee employee) async {
     try {
-      String uri = "http://localhost/pesafy_marketers/update_clients.php";
+      String uri = "https://api.pesafy.africa/marketers/update_clients.php";
       var res = await http.post(Uri.parse(uri), body: {
         "id": employee.id.toString(),
         "business_name": employee.businessName,
@@ -130,14 +130,14 @@ class _ViewClientsState extends State<ViewClients> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Clients Details'),
+        title: const Text('Clients Details'),
         actions: [
           IconButton(
             onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => AddedClients(
+                  builder: (context) => const AddedClients(
                     isEditing: false,
                     id: 0,
                   ),
@@ -149,7 +149,7 @@ class _ViewClientsState extends State<ViewClients> {
         ],
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : SfDataGrid(
               source: employeeDataSource,
               columnWidthMode: ColumnWidthMode.fill,
@@ -157,57 +157,57 @@ class _ViewClientsState extends State<ViewClients> {
                 GridColumn(
                   columnName: 'id',
                   label: Container(
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     alignment: Alignment.center,
-                    child: Text('ID'),
+                    child: const Text('ID'),
                   ),
                 ),
                 GridColumn(
                   columnName: 'business_name',
                   label: Container(
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     alignment: Alignment.center,
-                    child: Text('Business Name'),
+                    child: const Text('Business Name'),
                   ),
                 ),
                 GridColumn(
                   columnName: 'contact',
                   label: Container(
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     alignment: Alignment.center,
-                    child: Text('Contact'),
+                    child: const Text('Contact'),
                   ),
                 ),
                 GridColumn(
                   columnName: 'location',
                   label: Container(
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     alignment: Alignment.center,
-                    child: Text('Location'),
+                    child: const Text('Location'),
                   ),
                 ),
                 GridColumn(
                   columnName: 'nature',
                   label: Container(
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     alignment: Alignment.center,
-                    child: Text('Nature'),
+                    child: const Text('Nature'),
                   ),
                 ),
                 GridColumn(
                   columnName: 'acquisition',
                   label: Container(
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     alignment: Alignment.center,
-                    child: Text('Acquisition'),
+                    child: const Text('Acquisition'),
                   ),
                 ),
                 GridColumn(
                   columnName: 'actions',
                   label: Container(
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     alignment: Alignment.center,
-                    child: Text('Actions'),
+                    child: const Text('Actions'),
                   ),
                 ),
               ],
@@ -237,21 +237,24 @@ class EmployeeDataSource extends DataGridSource {
     for (var i = 0; i < employeeData.length; i++) {
       final employee = employeeData[i];
       _dataGridRows.add(
-        DataGridRow(cells: [
-          DataGridCell<int>(columnName: 'id', value: employee.id),
-          DataGridCell<String>(
-              columnName: 'business_name', value: employee.businessName),
-          DataGridCell<String>(columnName: 'contact', value: employee.contact),
-          DataGridCell<String>(
-              columnName: 'location', value: employee.location),
-          DataGridCell<String>(columnName: 'nature', value: employee.nature),
-          DataGridCell<String>(
-              columnName: 'acquisition', value: employee.acquisition),
-          DataGridCell<String>(
-            columnName: 'Actions',
-            value: '',
-          ),
-        ]),
+        DataGridRow(
+          cells: [
+            DataGridCell<int>(columnName: 'id', value: employee.id),
+            DataGridCell<String>(
+                columnName: 'business_name', value: employee.businessName),
+            DataGridCell<String>(
+                columnName: 'contact', value: employee.contact),
+            DataGridCell<String>(
+                columnName: 'location', value: employee.location),
+            DataGridCell<String>(columnName: 'nature', value: employee.nature),
+            DataGridCell<String>(
+                columnName: 'acquisition', value: employee.acquisition),
+            const DataGridCell<String>(
+              columnName: 'Actions',
+              value: '',
+            ),
+          ],
+        ),
       );
     }
   }
@@ -277,12 +280,12 @@ class EmployeeDataSource extends DataGridSource {
         if (columnName == 'Actions') {
           return Container(
             alignment: Alignment.center,
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
-                  icon: Icon(Icons.edit),
+                  icon: const Icon(Icons.edit),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -294,24 +297,24 @@ class EmployeeDataSource extends DataGridSource {
                   },
                 ),
                 IconButton(
-                  icon: Icon(Icons.delete),
+                  icon: const Icon(Icons.delete),
                   onPressed: () {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('Delete Confirmation'),
-                          content: Text(
+                          title: const Text('Delete Confirmation'),
+                          content: const Text(
                               'Are you sure you want to delete this record?'),
                           actions: [
                             TextButton(
-                              child: Text('Cancel'),
+                              child: const Text('Cancel'),
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
                             ),
                             TextButton(
-                              child: Text('Delete'),
+                              child: const Text('Delete'),
                               onPressed: () {
                                 Navigator.of(context).pop();
                                 deleteEmployee(employee);
@@ -329,7 +332,7 @@ class EmployeeDataSource extends DataGridSource {
         } else {
           return Container(
             alignment: Alignment.center,
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: Text(cellValue),
           );
         }

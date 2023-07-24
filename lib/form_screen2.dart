@@ -28,7 +28,7 @@ class _LoginState extends State<Login> {
         backgroundColor: Colors.green,
         textColor: Colors.white,
       );
-      Navigator.pushNamed(context, "/fourth");
+      Navigator.pushNamed(context, "/clients");
         
     } else {
       Fluttertoast.showToast(
@@ -39,7 +39,7 @@ class _LoginState extends State<Login> {
         backgroundColor: Colors.red,
         textColor: Colors.white,
       );
-      Navigator.pushNamed(context, "/second");
+      Navigator.pushNamed(context, "/register");
     }
   }
 
@@ -47,19 +47,19 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Login SignUp',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
-      body: Container(
+      body: SizedBox(
         height: 700,
         child: Card(
           color: Colors.amber,
           child: Column(
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Text(
                   'Register',
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
@@ -70,7 +70,7 @@ class _LoginState extends State<Login> {
                 child: TextField(
                   decoration: InputDecoration(
                     labelText: 'Username',
-                    prefixIcon: Icon(Icons.person),
+                    prefixIcon: const Icon(Icons.person),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -84,7 +84,7 @@ class _LoginState extends State<Login> {
                   obscureText: true,
                   decoration: InputDecoration(
                     labelText: 'Password',
-                    prefixIcon: Icon(Icons.lock),
+                    prefixIcon: const Icon(Icons.lock),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -97,7 +97,7 @@ class _LoginState extends State<Login> {
                   Expanded(
                     child: MaterialButton(
                       color: Colors.pink,
-                      child: Text(
+                      child: const Text(
                         'Login',
                         style: TextStyle(
                           fontSize: 20,

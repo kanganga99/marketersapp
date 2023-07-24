@@ -113,7 +113,7 @@ class _AddedClientsState extends State<AddedClients> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
           child: Form(
             key: _formKey, // Assign the form key
             child: Column(
@@ -122,7 +122,7 @@ class _AddedClientsState extends State<AddedClients> {
                 TextFormField(
                   keyboardType: TextInputType.text,
                   controller: businessnameController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Business Name',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.business),
@@ -134,11 +134,11 @@ class _AddedClientsState extends State<AddedClients> {
                     return null;
                   },
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 TextFormField(
                   keyboardType: TextInputType.phone,
                   controller: contactController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Contact',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.contact_phone),
@@ -152,11 +152,11 @@ class _AddedClientsState extends State<AddedClients> {
                     return null;
                   },
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 TextFormField(
                   keyboardType: TextInputType.text,
                   controller: locationController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Location',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.location_on),
@@ -168,11 +168,11 @@ class _AddedClientsState extends State<AddedClients> {
                     return null;
                   },
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 TextFormField(
                   keyboardType: TextInputType.text,
                   controller: natureController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Nature',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.nature),
@@ -184,11 +184,11 @@ class _AddedClientsState extends State<AddedClients> {
                     return null;
                   },
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 TextFormField(
                   keyboardType: TextInputType.text,
                   controller: acquisitionController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Acquisition',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.local_atm),
@@ -200,7 +200,7 @@ class _AddedClientsState extends State<AddedClients> {
                     return null;
                   },
                 ),
-                SizedBox(height: 40),
+                const SizedBox(height: 40),
                 ElevatedButton(
                   onPressed: addOrUpdateEmployee,
                   child: Text(isEditing ? 'Update' : 'Add'),

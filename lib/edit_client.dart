@@ -93,11 +93,11 @@ class _EditClientState extends State<EditClient> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Client'),
+        title: const Text('Edit Client'),
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Form(
             key: _formKey,
             child: Column(
@@ -105,7 +105,7 @@ class _EditClientState extends State<EditClient> {
               children: [
                 TextFormField(
                   controller: businessNameController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Business Name',
                   ),
                   validator: (value) {
@@ -115,10 +115,10 @@ class _EditClientState extends State<EditClient> {
                     return null;
                   },
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 TextFormField(
                   controller: contactController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Contact',
                   ),
                   validator: (value) {
@@ -128,10 +128,10 @@ class _EditClientState extends State<EditClient> {
                     return null;
                   },
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 TextFormField(
                   controller: locationController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Location',
                   ),
                   validator: (value) {
@@ -141,10 +141,10 @@ class _EditClientState extends State<EditClient> {
                     return null;
                   },
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 TextFormField(
                   controller: natureController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Nature',
                   ),
                   validator: (value) {
@@ -154,10 +154,10 @@ class _EditClientState extends State<EditClient> {
                     return null;
                   },
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 TextFormField(
                   controller: acquisitionController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Acquisition',
                   ),
                   validator: (value) {
@@ -167,14 +167,14 @@ class _EditClientState extends State<EditClient> {
                     return null;
                   },
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       updateClient();
                     }
                   },
-                  child: Text('Update'),
+                  child: const Text('Update'),
                 ),
               ],
             ),
