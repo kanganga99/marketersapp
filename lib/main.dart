@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:pesafy_marketer/rootapp.dart';
 import 'login1.dart';
 import 'sign_up.dart';
 import 'view_clients.dart';
+import 'profile.dart';
 
 void main() {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.green),
+      theme: ThemeData(primarySwatch: Colors.blueGrey),
       title: 'Pesafy Affiliates',
       initialRoute: '/',
       routes: {
@@ -15,7 +17,8 @@ void main() {
         '/register': (context) => const SignUp(),
         // '/third': (context) => const AddClients(),
         // '/third': (context) => AddedClients(),
-        '/clients': (context) => const ViewClients(),
+        '/root': (context) => const Root(),
+        '/profile': (context) => ProfileScreen(),
       },
     ),
   );

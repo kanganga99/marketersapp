@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:pesafy_marketer/rootapp.dart';
 
 class Employee {
   int id;
@@ -77,7 +78,7 @@ class _AddedClientsState extends State<AddedClients> {
       msg: message,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
-      backgroundColor: Colors.green[600],
+      backgroundColor: Colors.blueGrey,
       textColor: Colors.white,
     );
   }
@@ -101,7 +102,6 @@ class _AddedClientsState extends State<AddedClients> {
           nature: data['nature'],
           acquisition: data['acquisition'],
         );
-
         businessnameController.text = editedEmployee.businessName;
         contactController.text = editedEmployee.contact;
         locationController.text = editedEmployee.location;
@@ -132,7 +132,12 @@ class _AddedClientsState extends State<AddedClients> {
 
     if (response.statusCode == 200) {
       showToast(isEditing ? 'Record updated' : 'Record added');
-      Navigator.pop(context);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Root(),
+        ),
+      );
     } else {
       showToast(isEditing ? 'Failed to update record' : 'Failed to add record');
     }
@@ -142,6 +147,7 @@ class _AddedClientsState extends State<AddedClients> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(isEditing ? 'Edit Client' : 'Add Client'),
         centerTitle: true,
       ),
@@ -188,20 +194,19 @@ class _AddedClientsState extends State<AddedClients> {
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
-                  keyboardType: TextInputType.text,
-                  controller: locationController,
-                  decoration: const InputDecoration(
-                    labelText: 'Location',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.location_on),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter location';
-                    }
-                    return null;
-                  },
-                ),
+                    keyboardType: TextInputType.text,
+                    controller: locationController,
+                    decoration: const InputDecoration(
+                      labelText: 'Location',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.location_on),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter location';
+                      }
+                      return null;
+                    }),
                 const SizedBox(height: 20),
                 TextFormField(
                   keyboardType: TextInputType.text,
@@ -245,13 +250,20 @@ class _AddedClientsState extends State<AddedClients> {
                   },
                 ),
                 const SizedBox(height: 40),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      addOrUpdateEmployee();
-                    }
-                  },
-                  child: Text(isEditing ? 'Update' : 'Add'),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        addOrUpdateEmployee();
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 15),
+                      textStyle: const TextStyle(fontSize: 18),
+                    ),
+                    child: Text(isEditing ? 'Update' : 'Add'),
+                  ),
                 ),
               ],
             ),

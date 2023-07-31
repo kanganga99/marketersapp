@@ -269,13 +269,11 @@ class _SignUpState extends State<SignUp> {
                       height: 50,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        color: Colors.green,
+                        color: Colors.blueGrey,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: const Center(
                         child: Text(
-
-                          
                           'Register',
                           style: TextStyle(
                             color: Colors.white,
@@ -293,9 +291,7 @@ class _SignUpState extends State<SignUp> {
                   children: [
                     const Text(
                       'Already a Member?',
-                      style: TextStyle(
-                        fontSize: 17,
-                      ),
+                      style: TextStyle(fontSize: 17),
                     ),
                     TextButton(
                       onPressed: () {
@@ -310,7 +306,7 @@ class _SignUpState extends State<SignUp> {
                       ),
                     ),
                   ],
-                )
+                ),
               ],
             ),
           ),

@@ -146,7 +146,7 @@ class _ViewClientsState extends State<ViewClients> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => AddedClients(
+                  builder: (context) => const AddedClients(
                     isEditing: false,
                     id: 0,
                   ),
@@ -178,7 +178,7 @@ class _ViewClientsState extends State<ViewClients> {
                     ),
                     title: Text(
                       'Business Name: ${employee.businessName}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -189,7 +189,7 @@ class _ViewClientsState extends State<ViewClients> {
                         const SizedBox(height: 8.0),
                         Text(
                           'Location: ${employee.location}',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
@@ -197,7 +197,7 @@ class _ViewClientsState extends State<ViewClients> {
                         ),
                         Text(
                           'Acquisition: ${employee.acquisition}',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
@@ -385,7 +385,8 @@ class EmployeeDataSource extends DataTableSource {
 }
 
 class DatabaseHelper {
-  static const String url = "http://localhost/pesafy_marketers/view_clients.php";
+  static const String url =
+      "http://localhost/pesafy_marketers/view_clients.php";
   static Future<http.Response> getData() async {
     return await http.get(Uri.parse(url));
   }

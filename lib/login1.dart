@@ -24,7 +24,7 @@ class _FormScreenState extends State<FormScreen> {
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM_RIGHT,
           timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.blueGrey,
           textColor: Colors.white,
           fontSize: 16.0,
         );
@@ -36,7 +36,16 @@ class _FormScreenState extends State<FormScreen> {
         });
         var data = json.decode(response.body);
         if (data == "success") {
-          Navigator.pushNamed(context, "/clients");
+          Fluttertoast.showToast(
+            msg: "Login Successful",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM_RIGHT,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.blueGrey,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+          Navigator.pushNamed(context, "/root");
           email.clear();
           password.clear();
         } else {
@@ -58,6 +67,7 @@ class _FormScreenState extends State<FormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false, // Remove the back icon
         title: const Text('Pesafy Marketers'),
         centerTitle: true,
       ),
@@ -72,11 +82,11 @@ class _FormScreenState extends State<FormScreen> {
               children: [
                 Image.asset(
                   'images/login.jpeg',
-                  height: 200,
-                  width: 200,
+                  height: 150,
+                  width: 150,
                 ),
                 const SizedBox(
-                  height: 50,
+                  height: 20,
                 ),
                 TextFormField(
                   keyboardType: TextInputType.emailAddress,
@@ -128,7 +138,7 @@ class _FormScreenState extends State<FormScreen> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: MaterialButton(
-                    color: Colors.green[100],
+                    color: Colors.blueGrey[100],
                     child: const Text(
                       'Login',
                       style: TextStyle(
@@ -145,7 +155,7 @@ class _FormScreenState extends State<FormScreen> {
                   ),
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 15,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

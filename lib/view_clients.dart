@@ -6,143 +6,31 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'add_clients3.dart';
 
 class ViewClients extends StatefulWidget {
-  const ViewClients({Key? key}) : super(key: key);
-
+  const ViewClients({Key? key, required this.employees, required this.isLoading}) : super(key: key);
+ final List<Employee2> employees;
+  final bool isLoading;
   @override
   State<ViewClients> createState() => _ViewClientsState();
 }
 
 class _ViewClientsState extends State<ViewClients> {
-  List<Employee> employees = <Employee>[];
+
   late EmployeeDataSource employeeDataSource;
-  bool isLoading = true;
 
-  int _selectedIndex = 0;
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
-  @override
-  void initState() {
-    super.initState();
-    fetchEmployeeData();
-  }
+
 
   Future<void> refreshData() async {
-    setState(() {
-      isLoading = true;
-    });
-    await fetchEmployeeData();
+    // setState(() {
+    //   isLoading = true;
+    // });
+    // await fetchEmployeeData();
   }
 
   Future<void> _handleRefresh() async {
-    await fetchEmployeeData();
+    // await fetchEmployeeData();
   }
 
-  Future<void> deleteEmployee(Employee employee) async {
-    try {
-      String uri = "https://api.pesafy.africa/marketers/delete_clients.php";
-      var res =
-          await http.post(Uri.parse(uri), body: {"id": employee.id.toString()});
-      var response = jsonDecode(res.body);
-      if (response["success"] == "true") {
-        Fluttertoast.showToast(
-          msg: "Record Deleted",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM_RIGHT,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
-      } else {
-        Fluttertoast.showToast(
-          msg: "Record Not Deleted",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM_RIGHT,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<void> updateEmployee(Employee employee) async {
-    try {
-      String uri = "https://api.pesafy.africa/marketers/update_clients.php";
-      var res = await http.post(Uri.parse(uri), body: {
-        "id": employee.id.toString(),
-        "business_name": employee.businessName,
-        "contact": employee.contact,
-        "location": employee.location,
-        "nature": employee.nature,
-        "acquisition": employee.acquisition,
-      });
-      var response = jsonDecode(res.body);
-      if (response["success"] == "true") {
-        print("Record updated");
-      } else {
-        print("Record not updated");
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<void> fetchEmployeeData() async {
-    final response = await DatabaseHelper.getData();
-    print(response.body);
-    if (response.statusCode == 200) {
-      dynamic responseData = jsonDecode(response.body);
-      List<dynamic> data = responseData;
-      if (data != null && data.isNotEmpty) {
-        final List<Employee> fetchedEmployees = data.map<Employee>((item) {
-          final int id = int.parse(item['id']);
-          final String businessName = item['business_name'];
-          final String contact = item['contact'];
-          final String location = item['location'];
-          final String nature = item['nature'];
-          final String acquisition = item['acquisition'];
-          return Employee(
-            id: id,
-            businessName: businessName,
-            contact: contact,
-            location: location,
-            nature: nature,
-            acquisition: acquisition,
-          );
-        }).toList();
-        setState(() {
-          employees = fetchedEmployees;
-          employeeDataSource = EmployeeDataSource(
-            employeeData: employees,
-            deleteEmployee: deleteEmployee,
-            updateEmployee: updateEmployee,
-            context: context,
-          );
-          isLoading = false;
-        });
-      } else {
-        print('Invalid response data');
-        Fluttertoast.showToast(msg: 'Invalid response data');
-        setState(() {
-          isLoading = false;
-        });
-      }
-    } else {
-      print('Failed to fetch data');
-      Fluttertoast.showToast(msg: 'Failed to fetch data');
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -154,22 +42,23 @@ class _ViewClientsState extends State<ViewClients> {
           'Clients Details',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const AddedClients(
-                    isEditing: false,
-                    id: 0,
-                  ),
-                ),
-              );
-            },
-            icon: const Icon(Icons.add),
-          ),
-        ],
+        centerTitle: true,
+        // actions: [
+        //   IconButton(
+        //     onPressed: () {
+        //       Navigator.push(
+        //         context,
+        //         MaterialPageRoute(
+        //           builder: (context) => const AddedClients(
+        //             isEditing: false,
+        //             id: 0,
+        //           ),
+        //         ),
+        //       );
+        //     },
+        //     icon: const Icon(Icons.add),
+        //   ),
+        // ],
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(
@@ -182,7 +71,7 @@ class _ViewClientsState extends State<ViewClients> {
             animatedIcon: AnimatedIcons.menu_close,
             animatedIconTheme: IconThemeData(size: 22.0),
             child: Icon(Icons.logout_rounded),
-            backgroundColor: Colors.green,
+            backgroundColor: Colors.blueGrey,
             overlayColor: Colors.black,
             overlayOpacity: 0.5,
             children: [
@@ -238,12 +127,12 @@ class _ViewClientsState extends State<ViewClients> {
       ),
       body: RefreshIndicator(
         onRefresh: _handleRefresh,
-        child: isLoading
+        child: widget.isLoading
             ? const Center(child: CircularProgressIndicator())
             : ListView.builder(
-                itemCount: employees.length,
+                itemCount: widget.employees.length,
                 itemBuilder: (context, index) {
-                  final employee = employees[index];
+                  final employee = widget.employees[index];
                   final heroTag = ''
                       'employee_hero_${employee.id}'; // Unique hero tag
                   return Stack(
@@ -368,7 +257,8 @@ class _ViewClientsState extends State<ViewClients> {
                             //                 onPressed: () {
                             //                   showDialog(
                             //                     context: context,
-                            //                     builder: (BuildContext context) {
+                            //                     builder:
+                            //                         (BuildContext context) {
                             //                       return AlertDialog(
                             //                         title: Text(
                             //                           'Delete Confirmation',
@@ -394,7 +284,8 @@ class _ViewClientsState extends State<ViewClients> {
                             //                             child: Text(
                             //                               'Delete',
                             //                               style: TextStyle(
-                            //                                   color: Colors.red),
+                            //                                   color:
+                            //                                       Colors.red),
                             //                             ),
                             //                             onPressed: () {
                             //                               Navigator.of(context)
@@ -465,39 +356,11 @@ class _ViewClientsState extends State<ViewClients> {
                 },
               ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add),
-            label: "Add",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outlined),
-            label: 'Profile',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: const Color(0xFF141518),
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.grey,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        onTap: _onItemTapped,
-      ),
     );
   }
 }
 
-class Employee {
+class Employee2 {
   final int id;
   final String businessName;
   final String contact;
@@ -505,7 +368,7 @@ class Employee {
   final String nature;
   final String acquisition;
 
-  Employee({
+  Employee2({
     required this.id,
     required this.businessName,
     required this.contact,
@@ -516,9 +379,9 @@ class Employee {
 }
 
 class EmployeeDataSource extends DataTableSource {
-  final List<Employee> employeeData;
-  final Function(Employee) deleteEmployee;
-  final Function(Employee) updateEmployee;
+  final List<Employee2> employeeData;
+  final Function(Employee2) deleteEmployee;
+  final Function(Employee2) updateEmployee;
   final BuildContext context;
 
   EmployeeDataSource({
