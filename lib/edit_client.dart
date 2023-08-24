@@ -28,7 +28,8 @@ class _EditClientState extends State<EditClient> {
   Future<void> fetchClientDetails() async {
     try {
       // Make an HTTP request to fetch client details with the specific ID
-      final response = await http.get(Uri.parse('http://localhost/pesafy_marketers/view_clients.php?id=${widget.clientId}'));
+      final response = await http.get(Uri.parse(
+          'http://localhost/pesafy_marketers/view_clients.php?id=${widget.clientId}'));
 
       if (response.statusCode == 200) {
         // Parse the response body as needed
@@ -63,7 +64,8 @@ class _EditClientState extends State<EditClient> {
         headers: <String, String>{
           'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
         },
-        body: 'id=${widget.clientId}&business_name=$businessName&contact=$contact&location=$location&nature=$nature&acquisition=$acquisition',
+        body:
+            'id=${widget.clientId}&business_name=$businessName&contact=$contact&location=$location&nature=$nature&acquisition=$acquisition',
       );
 
       if (response.statusCode == 200) {

@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class User {
-  final String username;
+  late final String username;
   final String phone;
   final String email;
 
@@ -30,16 +30,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> fetchUserData() async {
     try {
-      String uri = "YOUR_API_ENDPOINT_TO_FETCH_USER_DATA";
-      var res = await http.get(Uri.parse(uri));
+      String apiUrl = "http://localhost/pesafy_marketers/get_onboarded.php";
+      var res = await http.get(Uri.parse(apiUrl));
       if (res.statusCode == 200) {
-        var userData = jsonDecode(res.body);
+        var data = jsonDecode(res.body);
+        List<String> businessNames = [];
+        for (var clientData in data) {
+          String businessName = clientData['business_name'];
+          businessNames.add(businessName);
+        }
         setState(() {
           userProfile = User(
-            username: userData['username'],
-            phone: userData['phone'],
-            email: userData['email'],
+            username:
+                'Loading...', // Set a default value for username (if needed)
+            phone: 'Loading...', // Set a default value for phone (if needed)
+            email: 'Loading...', // Set a default value for email (if needed)
           );
+          // Show only the first business_name in the list, assuming there is at least one client
+          if (businessNames.isNotEmpty) {
+            userProfile?.username = businessNames.first;
+          }
         });
       } else {
         // Handle API error or data not found
@@ -154,21 +164,5 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     );
-  }
-}
-
-
-
-class MyWidget extends StatefulWidget {
-  const MyWidget({super.key});
-
-  @override
-  State<MyWidget> createState() => _MyWidgetState();
-}
-
-class _MyWidgetState extends State<MyWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
   }
 }

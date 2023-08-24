@@ -222,7 +222,6 @@ class _SignUpState extends State<SignUp> {
                         final phone = phoneController.text;
                         final email = emailController.text;
                         final password = passController.text;
-
                         // Check if email already exists
                         final emailExists = await checkEmailExists(email);
                         if (emailExists) {

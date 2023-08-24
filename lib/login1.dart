@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FormScreen extends StatefulWidget {
   const FormScreen({Key? key}) : super(key: key);
@@ -15,6 +16,22 @@ class _FormScreenState extends State<FormScreen> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   bool passToggle = true;
+
+  late SharedPreferences logindata;
+  late bool newuser;
+
+  void initState() {
+    super.initState();
+    check_if_already_login();
+  }
+
+  void check_if_already_login() async {
+    logindata = await SharedPreferences.getInstance();
+    newuser = (logindata.getBool('login') ?? true);
+    if (newuser == false) {
+      Navigator.pushNamed(context, "/root");
+    }
+  }
 
   Future login(BuildContext context) async {
     if (_formFieldKey.currentState!.validate()) {
@@ -36,6 +53,8 @@ class _FormScreenState extends State<FormScreen> {
         });
         var data = json.decode(response.body);
         if (data == "success") {
+          logindata.setBool('login', false);
+          logindata.setString('email', email.text);
           Fluttertoast.showToast(
             msg: "Login Successful",
             toastLength: Toast.LENGTH_SHORT,

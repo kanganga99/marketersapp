@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'add_clients3.dart';
+import 'views/home/add_clients3.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
   final int selectedIndex;

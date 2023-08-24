@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'add_clients3.dart';
+import 'views/home/add_clients3.dart';
 
 class ViewClients extends StatefulWidget {
   const ViewClients({Key? key}) : super(key: key);

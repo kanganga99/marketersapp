@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'add_clients3.dart';
-import 'view_clients.dart';
+import 'views/home/add_clients3.dart';
+import './views/home/view_clients.dart';
 
 class Search extends StatefulWidget {
   final List<Employee2> employees; // Pass the list of all employees
@@ -20,6 +20,12 @@ class _SearchState extends State<Search> {
   void initState() {
     filteredEmployees = widget.employees; // Initialize with all employees
     super.initState();
+  }
+
+  void _clearSearch() {
+    setState(() {
+      filteredEmployees = widget.employees;
+    });
   }
 
   void _search(String query) {
@@ -65,7 +71,7 @@ class _SearchState extends State<Search> {
               ),
               suffixIcon: IconButton(
                 onPressed: () {
-                  _search('');
+                  _clearSearch();
                 },
                 icon: const Icon(Icons.clear),
               ),

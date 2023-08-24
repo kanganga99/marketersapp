@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pesafy_marketer/rootapp.dart';
 import 'login1.dart';
 import 'sign_up.dart';
-import 'view_clients.dart';
-import 'profile.dart';
+import './views/home/view_clients.dart';
+import 'views/profile/profile.dart';
 
 void main() {
   runApp(

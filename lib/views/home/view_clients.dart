@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'add_clients3.dart';
+// import 'add_clients3.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ViewClients extends StatefulWidget {
-  const ViewClients({Key? key, required this.employees, required this.isLoading}) : super(key: key);
- final List<Employee2> employees;
+  const ViewClients(
+      {Key? key, required this.employees, required this.isLoading})
+      : super(key: key);
+  final List<Employee2> employees;
   final bool isLoading;
   @override
   State<ViewClients> createState() => _ViewClientsState();
 }
 
 class _ViewClientsState extends State<ViewClients> {
-
   late EmployeeDataSource employeeDataSource;
-
-
-
 
   Future<void> refreshData() async {
     // setState(() {
@@ -31,6 +29,20 @@ class _ViewClientsState extends State<ViewClients> {
     // await fetchEmployeeData();
   }
 
+  late SharedPreferences logindata;
+  late String email;
+
+  void initState() {
+    super.initState();
+    initial();
+  }
+
+  void initial() async {
+    logindata = await SharedPreferences.getInstance();
+    setState(() {
+      email = logindata.getString('email')!;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,8 +113,8 @@ class _ViewClientsState extends State<ViewClients> {
                           TextButton(
                             child: const Text('Ok'),
                             onPressed: () {
+                              logindata.setBool('login', true);
                               Navigator.pushNamed(context, "/");
-                              // deleteEmployee();
                             },
                           ),
                         ],

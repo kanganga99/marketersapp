@@ -1,83 +1,65 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
-class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+class FormScreen extends StatefulWidget {
+  const FormScreen({Key? key}) : super(key: key);
 
   @override
-  State<Login> createState() => _LoginState();
+  State<FormScreen> createState() => _FormScreenState();
 }
 
-class _LoginState extends State<Login> {
-  final _formKey = GlobalKey<FormState>();
-  final emailController = TextEditingController();
-  final passController = TextEditingController();
+class _FormScreenState extends State<FormScreen> {
+  final _formFieldKey = GlobalKey<FormState>();
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
   bool passToggle = true;
 
-  @override
-  void dispose() {
-    emailController.dispose();
-    passController.dispose();
-    super.dispose();
-  }
-
-  Future<http.Response> loginUser(String email, String password) async {
-    final response = await http.post(
-      Uri.parse('http://localhost/pesafy_marketers/login.php'),
-      headers: <String, String>{
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      },
-      body: 'email=$email&password=$password',
-    );
-    return response;
-  }
-
-  void login() async {
-    final email = emailController.text;
-    final password = passController.text;
-
-    final response = await loginUser(email, password);
-    if (response.statusCode == 200) {
-      // Login successful
-      Navigator.pushNamed(context, "/clients");
-
-      // Clear the text fields
-      emailController.clear();
-      passController.clear();
-    } else if (response.statusCode == 404) {
-      // User not found
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Login Failed'),
-          content: Text('User not found. Please register first.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
-    } else {
-      // Other error occurred
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Login Failed'),
-          content: Text('An error occurred. Please try again later.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
+  Future login(BuildContext context) async {
+    if (_formFieldKey.currentState!.validate()) {
+      if (email.text == '' || password.text == '') {
+        Fluttertoast.showToast(
+          msg: "Both fields blank",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM_RIGHT,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.blueGrey,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      } else {
+        var url = Uri.parse('https://api.pesafy.africa/marketers/login.php');
+        var response = await http.post(url, body: {
+          "email": email.text,
+          "password": password.text,
+        });
+        var data = json.decode(response.body);
+        if (data == "success") {
+          Fluttertoast.showToast(
+            msg: "Login Successful",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM_RIGHT,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.blueGrey,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+          Navigator.pushNamed(context, "/root");
+          email.clear();
+          password.clear();
+        } else {
+          Fluttertoast.showToast(
+            msg: "Email and password combination does not exist",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM_RIGHT,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+        }
+      }
     }
   }
 
@@ -85,6 +67,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false, // Remove the back icon
         title: const Text('Pesafy Marketers'),
         centerTitle: true,
       ),
@@ -92,22 +75,22 @@ class _LoginState extends State<Login> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 60),
           child: Form(
-            key: _formKey,
+            key: _formFieldKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  '../images/login.jpeg',
-                  height: 200,
-                  width: 200,
+                  'images/login.jpeg',
+                  height: 150,
+                  width: 150,
                 ),
                 const SizedBox(
-                  height: 50,
+                  height: 20,
                 ),
                 TextFormField(
                   keyboardType: TextInputType.emailAddress,
-                  controller: emailController,
+                  controller: email,
                   decoration: const InputDecoration(
                     labelText: 'Email',
                     border: OutlineInputBorder(),
@@ -127,7 +110,7 @@ class _LoginState extends State<Login> {
                 ),
                 TextFormField(
                   keyboardType: TextInputType.text,
-                  controller: passController,
+                  controller: password,
                   obscureText: passToggle,
                   decoration: InputDecoration(
                     labelText: 'Password',
@@ -144,12 +127,6 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter password';
-                    }
-                    return null;
-                  },
                 ),
                 const SizedBox(
                   height: 20,
@@ -161,7 +138,7 @@ class _LoginState extends State<Login> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: MaterialButton(
-                    color: Colors.green[100],
+                    color: Colors.blueGrey[100],
                     child: const Text(
                       'Login',
                       style: TextStyle(
@@ -171,14 +148,14 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                     onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        login();
+                      if (_formFieldKey.currentState!.validate()) {
+                        login(context);
                       }
                     },
                   ),
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 15,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -194,7 +171,7 @@ class _LoginState extends State<Login> {
                         Navigator.pushNamed(context, "/register");
                       },
                       child: const Text(
-                        'Register',
+                        'Sign Up',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,

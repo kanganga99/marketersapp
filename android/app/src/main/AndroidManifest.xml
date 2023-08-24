@@ -2,7 +2,7 @@
     package="com.example.pesafy_marketer">
     <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="pesafy_marketers"
+        android:label="affiliate"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

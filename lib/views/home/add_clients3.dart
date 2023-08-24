@@ -96,17 +96,19 @@ class _AddedClientsState extends State<AddedClients> {
       setState(() {
         editedEmployee = Employee(
           id: editedEmployee.id,
-          businessName: data['business_name'],
-          contact: data['contact'],
-          location: data['location'],
-          nature: data['nature'],
-          acquisition: data['acquisition'],
+          businessName: data['business_name'] ?? '',
+          contact: data['contact'] ?? '',
+          location: data['location'] ?? '',
+          nature: data['nature'] ?? '',
+          acquisition: data['acquisition'] ?? selectedAcquisition,
         );
         businessnameController.text = editedEmployee.businessName;
         contactController.text = editedEmployee.contact;
         locationController.text = editedEmployee.location;
         natureController.text = editedEmployee.nature;
-        selectedAcquisition = editedEmployee.acquisition;
+        if (editedEmployee.acquisition.isNotEmpty) {
+            selectedAcquisition = editedEmployee.acquisition;
+        }
       });
     } else {
       showToast('Failed to fetch clients data');

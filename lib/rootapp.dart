@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:pesafy_marketer/profile.dart';
+import 'package:pesafy_marketer/views/profile/profile.dart';
 import 'package:pesafy_marketer/search.dart';
-import 'package:pesafy_marketer/view_clients.dart';
-import 'add_clients3.dart';
+import './views/home/view_clients.dart';
+import 'views/home/add_clients3.dart';
 import 'bottom_navigation_bar.dart';
 
 class Root extends StatefulWidget {
@@ -34,7 +34,7 @@ class _RootState extends State<Root> {
     await fetchEmployeeData();
   }
 
-    @override
+  @override
   void initState() {
     super.initState();
     fetchEmployeeData();
@@ -148,13 +148,13 @@ class _RootState extends State<Root> {
     return Scaffold(
       body: [
         ViewClients(
-         employees: isLoading ? [] : employees,
-         isLoading: isLoading,
+          employees: isLoading ? [] : employees,
+          isLoading: isLoading,
         ),
         Search(
           employees: isLoading ? [] : employees,
         ),
-        AddedClients(
+        const AddedClients(
           isEditing: false,
           id: 0,
         ),
