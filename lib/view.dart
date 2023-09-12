@@ -83,7 +83,7 @@ class _ViewClientsState extends State<ViewClients> {
     if (response.statusCode == 200) {
       dynamic responseData = jsonDecode(response.body);
       List<dynamic> data = responseData;
-      if (data != null && data.isNotEmpty) {
+      if (data.isNotEmpty) {
         final List<Employee> fetchedEmployees = data.map<Employee>((item) {
           final int id = int.parse(item['id']);
           final String businessName = item['business_name'];

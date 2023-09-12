@@ -29,18 +29,18 @@ class _SignUpState extends State<SignUp> {
     super.dispose();
   }
 
-  Future<bool> checkEmailExists(String email) async {
-    final response = await http.get(
-      Uri.parse(
-          'https://api.pesafy.africa/marketers/check_email.php?email=$email'),
-    );
-    if (response.statusCode == 200) {
-      final String result = response.body;
-      return result.toLowerCase() == 'true';
-    } else {
-      throw Exception('Failed to check email');
-    }
-  }
+  // Future<bool> checkEmailExists(String email) async {
+  //   final response = await http.get(
+  //     Uri.parse(
+  //         'https://api.pesafy.africa/marketers/check_email.php?email=$email'),
+  //   );
+  //   if (response.statusCode == 200) {
+  //     final String result = response.body;
+  //     return result.toLowerCase() == 'true'; // Return true if email exists
+  //   } else {
+  //     throw Exception('Failed to check email');
+  //   }
+  // }
 
   Future<http.Response> registerUser(
     String username,
@@ -49,7 +49,7 @@ class _SignUpState extends State<SignUp> {
     String password,
   ) async {
     final response = await http.post(
-      Uri.parse('https://api.pesafy.africa/marketers/sign_up.php'),
+      Uri.parse('https://api.pesafy.africa/marketers/sign_up1.php'),
       headers: <String, String>{
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       },
@@ -222,46 +222,52 @@ class _SignUpState extends State<SignUp> {
                         final phone = phoneController.text;
                         final email = emailController.text;
                         final password = passController.text;
+
                         // Check if email already exists
-                        final emailExists = await checkEmailExists(email);
-                        if (emailExists) {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text('Email Already Exists'),
-                              content: Text(
-                                  'The email $email is already registered.'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text('OK'),
-                                ),
-                              ],
-                            ),
-                          );
-                        } else {
-                          // Register the user
+                        // final emailExists = await checkEmailExists(email);
+                        // print('Email Exists: $emailExists');
+
+                        // if (emailExists) {
+                        //   showDialog(
+                        //     context: context,
+                        //     builder: (context) => AlertDialog(
+                        //       title: const Text('Email Already Exists'),
+                        //       content: Text(
+                        //           'The email $email is already registered.'),
+                        //       actions: [
+                        //         TextButton(
+                        //           onPressed: () {
+                        //             Navigator.of(context).pop();
+                        //           },
+                        //           child: const Text('OK'),
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   );
+                        // } else {
+                          // Register the user only if email doesn't exist
                           final response = await registerUser(
                             username,
                             phone,
                             email,
                             password,
                           );
+
                           if (response.statusCode == 200) {
                             showToast('Registered successfully');
                             print('Form submitted successfully');
+                            Navigator.pushNamed(context, "/");
                           } else {
                             throw Exception('Failed to submit form');
                           }
+
                           // Clear the form fields
                           nameController.clear();
                           phoneController.clear();
                           emailController.clear();
                           passController.clear();
                           confirmPassController.clear();
-                        }
+                        // }
                       }
                     },
                     child: Container(

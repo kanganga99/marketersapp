@@ -1,25 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:pesafy_marketer/rootapp.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'login1.dart';
 import 'sign_up.dart';
-import './views/home/view_clients.dart';
-import 'views/profile/profile.dart';
+// import './views/home/view_clients.dart';
 
-void main() {
-  runApp(
-    MaterialApp(
+SharedPreferences? globalPrefs;
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  globalPrefs = await SharedPreferences.getInstance();
+  runApp(MarketersApp());
+}
+
+class MarketersApp extends StatelessWidget {
+  const MarketersApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.blueGrey),
       title: 'Pesafy Affiliates',
       initialRoute: '/',
-      routes: {
-        '/': (context) => const FormScreen(),
-        '/register': (context) => const SignUp(),
-        // '/third': (context) => const AddClients(),
-        // '/third': (context) => AddedClients(),
-        '/root': (context) => const Root(),
-        '/profile': (context) => ProfileScreen(),
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          case '/':
+            bool newuser = (globalPrefs!.getBool('login') ?? true);
+            return MaterialPageRoute(builder: (_) {
+              if (newuser) {
+                return FormScreen();
+              } else {
+                return Root();
+              }
+            });
+          case '/register':
+            return MaterialPageRoute(builder: (_) {
+              return SignUp();
+            });
+          default:
+            return MaterialPageRoute(builder: (_) {
+              return Root();
+            });
+        }
       },
-    ),
-  );
+    );
+  }
 }

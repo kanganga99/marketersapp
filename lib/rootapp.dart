@@ -100,7 +100,7 @@ class _RootState extends State<Root> {
     if (response.statusCode == 200) {
       dynamic responseData = jsonDecode(response.body);
       List<dynamic> data = responseData;
-      if (data != null && data.isNotEmpty) {
+      if (data.isNotEmpty) {
         final List<Employee2> fetchedEmployees = data.map<Employee2>((item) {
           final int id = int.parse(item['id']);
           final String businessName = item['business_name'];

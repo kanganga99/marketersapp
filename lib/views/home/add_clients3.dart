@@ -43,11 +43,11 @@ class _AddedClientsState extends State<AddedClients> {
   TextEditingController contactController = TextEditingController();
   TextEditingController locationController = TextEditingController();
   TextEditingController natureController = TextEditingController();
+
   List<String> acquisitionOptions = [
     'First Time',
-    'On boarded',
+    'On Boarded',
     'Not Yet',
-    'Visit'
   ];
   String selectedAcquisition = "First Time";
 
@@ -107,7 +107,7 @@ class _AddedClientsState extends State<AddedClients> {
         locationController.text = editedEmployee.location;
         natureController.text = editedEmployee.nature;
         if (editedEmployee.acquisition.isNotEmpty) {
-            selectedAcquisition = editedEmployee.acquisition;
+          selectedAcquisition = editedEmployee.acquisition;
         }
       });
     } else {

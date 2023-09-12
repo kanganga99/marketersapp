@@ -15,6 +15,7 @@ class Search extends StatefulWidget {
 
 class _SearchState extends State<Search> {
   List<Employee2> filteredEmployees = [];
+  TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -24,7 +25,8 @@ class _SearchState extends State<Search> {
 
   void _clearSearch() {
     setState(() {
-      filteredEmployees = widget.employees;
+      _searchController.clear(); // Clear the search field
+      filteredEmployees = widget.employees; // Reset filtered results
     });
   }
 
@@ -42,8 +44,6 @@ class _SearchState extends State<Search> {
         searchResults.add(employee);
       }
     }
-    print('object ${widget.employees.length}');
-
     setState(() {
       filteredEmployees = searchResults;
     });
@@ -55,10 +55,10 @@ class _SearchState extends State<Search> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Padding(
-          padding:
-              const EdgeInsets.fromLTRB(35.0, 35.0, 35.0, 0), // Updated padding
+          padding: const EdgeInsets.fromLTRB(35.0, 35.0, 35.0, 0),
           child: TextField(
-            onChanged: _search, // Call _search function when text changes
+            controller: _searchController, // Set the controller
+            onChanged: _search,
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20.0),
@@ -70,9 +70,7 @@ class _SearchState extends State<Search> {
                 size: 25.0,
               ),
               suffixIcon: IconButton(
-                onPressed: () {
-                  _clearSearch();
-                },
+                onPressed: _clearSearch,
                 icon: const Icon(Icons.clear),
               ),
             ),
@@ -84,8 +82,7 @@ class _SearchState extends State<Search> {
             itemCount: filteredEmployees.length,
             itemBuilder: (context, index) {
               final employee = filteredEmployees[index];
-              final heroTag = ''
-                  'employee_hero_${employee.id}'; // Unique hero tag
+              final heroTag = 'employee_hero_${employee.id}'; // Unique hero tag
               return Stack(
                 children: [
                   Card(

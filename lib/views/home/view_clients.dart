@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'add_clients3.dart';
-// import 'add_clients3.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/cupertino.dart';
 
 class ViewClients extends StatefulWidget {
   const ViewClients(
@@ -16,7 +16,17 @@ class ViewClients extends StatefulWidget {
 }
 
 class _ViewClientsState extends State<ViewClients> {
+  late List<Employee2> filteredEmployees = List.from(
+    widget.employees.where((element) => element.acquisition == "First Time"),
+  );
   late EmployeeDataSource employeeDataSource;
+  final Map<int, String> acquisitionTypes = {
+    0: "First Time",
+    1: "On Boarded",
+    2: "Not Yet",
+  };
+  int selectedAcquisitionIndex = 0; // Default to "Not Yet"
+  int selectedSegmentIndex = 0;
 
   Future<void> refreshData() async {
     // setState(() {
@@ -47,31 +57,49 @@ class _ViewClientsState extends State<ViewClients> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false, // Remove the back icon
-        titleSpacing: 15, // Remove the default padding around the title
-        title: const Text(
-          'Clients Details',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        // actions: [
-        //   IconButton(
-        //     onPressed: () {
-        //       Navigator.push(
-        //         context,
-        //         MaterialPageRoute(
-        //           builder: (context) => const AddedClients(
-        //             isEditing: false,
-        //             id: 0,
-        //           ),
-        //         ),
-        //       );
-        //     },
-        //     icon: const Icon(Icons.add),
-        //   ),
-        // ],
-      ),
+      // appBar: AppBar(
+      // automaticallyImplyLeading: false, // Remove the back icon
+      // titleSpacing: 15, // Remove the default padding around the title
+      // centerTitle: true,
+      // bottom: PreferredSize(
+      //   preferredSize: Size.fromHeight(10.0),
+      //   child: Padding(
+      //     padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      //     child: CupertinoSegmentedControl<int>(
+      //       borderColor: Colors.blueGrey,
+      //       selectedColor: Colors.white,
+      //       unselectedColor: Colors.blueGrey,
+      //       groupValue: selectedSegmentIndex,
+      //       children: {
+      //         0: Text('First Time'),
+      //         1: Text('On Boarded'),
+      //         2: Text('Not Yet'),
+      //       },
+      //       onValueChanged: (index) {
+      //         setState(() {
+      //           selectedSegmentIndex = index;
+      //         });
+      //       },
+      //     ),
+      //   ),
+      // ),
+      // actions: [
+      //   IconButton(
+      //     onPressed: () {
+      //       Navigator.push(
+      //         context,
+      //         MaterialPageRoute(
+      //           builder: (context) => const AddedClients(
+      //             isEditing: false,
+      //             id: 0,
+      //           ),
+      //         ),
+      //       );
+      //     },
+      //     icon: const Icon(Icons.add),
+      //   ),
+      // ],
+      // ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(
           bottom: 16.0,
@@ -137,237 +165,296 @@ class _ViewClientsState extends State<ViewClients> {
           ),
         ),
       ),
-      body: RefreshIndicator(
-        onRefresh: _handleRefresh,
-        child: widget.isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : ListView.builder(
-                itemCount: widget.employees.length,
-                itemBuilder: (context, index) {
-                  final employee = widget.employees[index];
-                  final heroTag = ''
-                      'employee_hero_${employee.id}'; // Unique hero tag
-                  return Stack(
-                    children: [
-                      Card(
-                        margin: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Hero(
-                              tag: heroTag,
-                              child: Image.asset(
-                                'images/logoi.jpeg',
-                                height: 100,
-                                width: 100,
-                              ),
-                            ),
-                            ListTile(
-                              title: Center(
-                                child: Text(
-                                  'ID: ${employee.id}',
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(height: 8.0),
-                                  Center(
-                                    child: Text(
-                                      'Business Name: ${employee.businessName}',
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                  Center(
-                                    child: Text(
-                                      'Contact: ${employee.contact}',
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                  Center(
-                                    child: Text(
-                                      'Acquisition: ${employee.acquisition}',
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            // TextButton(
-                            //   onPressed: () {
-                            //     showDialog(
-                            //       context: context,
-                            //       builder: (BuildContext context) {
-                            //         return AlertDialog(
-                            //           title: Text(
-                            //             'Delete Confirmation',
-                            //             style: TextStyle(
-                            //               fontWeight: FontWeight.bold,
-                            //               color: Colors.black,
-                            //               fontSize: 15,
-                            //             ),
-                            //           ),
-                            //           content: Text(
-                            //             'Are you sure you want to delete this client?',
-                            //           ),
-                            //           actions: [
-                            //             TextButton(
-                            //               child: Text('Cancel'),
-                            //               onPressed: () {
-                            //                 Navigator.of(context).pop();
-                            //               },
-                            //             ),
-                            //             TextButton(
-                            //               child: Text(
-                            //                 'Delete',
-                            //                 style: TextStyle(color: Colors.red),
-                            //               ),
-                            //               onPressed: () {
-                            //                 Navigator.of(context).pop();
-                            //                 deleteEmployee(employee);
-                            //               },
-                            //             ),
-                            //           ],
-                            //         );
-                            //       },
-                            //     );
-                            //   },
-                            //   style: ElevatedButton.styleFrom(
-                            //     backgroundColor: Colors.white,
-                            //     foregroundColor: Colors.black,
-                            //     fixedSize: Size(500, 20),
-                            //   ),
-                            //   child: Text("Delete"),
-                            // ),
-                            // Padding(
-                            //   padding: EdgeInsets.only(bottom: 8.0),
-                            //   child: Row(
-                            //     children: [
-                            //       Expanded(
-                            //         child: Row(
-                            //           children: [
-                            //             Expanded(
-                            //               child: FloatingActionButton.extended(
-                            //                 onPressed: () {
-                            //                   showDialog(
-                            //                     context: context,
-                            //                     builder:
-                            //                         (BuildContext context) {
-                            //                       return AlertDialog(
-                            //                         title: Text(
-                            //                           'Delete Confirmation',
-                            //                           style: TextStyle(
-                            //                             fontWeight:
-                            //                                 FontWeight.bold,
-                            //                             color: Colors.black,
-                            //                             fontSize: 15,
-                            //                           ),
-                            //                         ),
-                            //                         content: Text(
-                            //                           'Are you sure you want to delete this client?',
-                            //                         ),
-                            //                         actions: [
-                            //                           TextButton(
-                            //                             child: Text('Cancel'),
-                            //                             onPressed: () {
-                            //                               Navigator.of(context)
-                            //                                   .pop();
-                            //                             },
-                            //                           ),
-                            //                           TextButton(
-                            //                             child: Text(
-                            //                               'Delete',
-                            //                               style: TextStyle(
-                            //                                   color:
-                            //                                       Colors.red),
-                            //                             ),
-                            //                             onPressed: () {
-                            //                               Navigator.of(context)
-                            //                                   .pop();
-                            //                               deleteEmployee(
-                            //                                   employee);
-                            //                             },
-                            //                           ),
-                            //                         ],
-                            //                       );
-                            //                     },
-                            //                   );
-                            //                 },
-                            //                 label: Row(
-                            //                   children: [
-                            //                     Text(
-                            //                       'Delete Client',
-                            //                       style: TextStyle(
-                            //                         fontSize: 15,
-                            //                         fontWeight: FontWeight.bold,
-                            //                         color: Colors.black,
-                            //                       ),
-                            //                     ),
-                            //                     Icon(
-                            //                       Icons.delete,
-                            //                       size: 25,
-                            //                       color: Color.fromARGB(
-                            //                           255, 53, 49, 49),
-                            //                     ),
-                            //                   ],
-                            //                 ),
-                            //                 backgroundColor: Colors.white,
-                            //               ),
-                            //             ),
-                            //           ],
-                            //         ),
-                            //       ),
-                            //     ],
-                            //   ),
-                            // ),
-                          ],
-                        ),
-                      ),
-                      Positioned(
-                        top: 8.0,
-                        left: 8.0,
-                        child: Hero(
-                          tag:
-                              '${heroTag}_edit_button', // Unique hero tag for edit button
-                          child: IconButton(
-                            icon: const Icon(Icons.edit),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => AddedClients(
-                                    isEditing: true,
-                                    id: employee.id,
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                },
+      body: Column(children: [
+        SizedBox(
+          height: 40.0,
+        ),
+        CupertinoSlidingSegmentedControl<int>(
+          groupValue: selectedSegmentIndex,
+          backgroundColor: Colors.blueGrey,
+          children: {
+            0: Container(
+              height: 40,
+              child: Center(
+                child: Text(
+                  'First Time',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ),
-      ),
+            ),
+            1: Container(
+              height: 40,
+              child: Center(
+                child: Text(
+                  'On Boarded',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+            2: Container(
+              height: 40,
+              child: Center(
+                child: Text(
+                  'Not Yet',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          },
+          onValueChanged: (index) {
+            setState(() {
+              filteredEmployees = List.from(
+                widget.employees.where((element) =>
+                    element.acquisition == acquisitionTypes[index]),
+              );
+              selectedSegmentIndex = index!;
+            });
+          },
+        ),
+        Expanded(
+          child: RefreshIndicator(
+            onRefresh: _handleRefresh,
+            child: widget.isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : ListView.builder(
+                    itemCount: filteredEmployees.length,
+                    itemBuilder: (context, index) {
+                      final employee = filteredEmployees[index];
+                      final heroTag = ''
+                          'employee_hero_${employee.id}'; // Unique hero tag
+                      return Stack(
+                        children: [
+                          Card(
+                            margin: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                Hero(
+                                  tag: heroTag,
+                                  child: Image.asset(
+                                    'images/logoi.jpeg',
+                                    height: 100,
+                                    width: 100,
+                                  ),
+                                ),
+                                ListTile(
+                                  title: Center(
+                                    child: Text(
+                                      'ID: ${employee.id}',
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  subtitle: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(height: 8.0),
+                                      Center(
+                                        child: Text(
+                                          'Business Name: ${employee.businessName}',
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                      Center(
+                                        child: Text(
+                                          'Contact: ${employee.contact}',
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                      Center(
+                                        child: Text(
+                                          'Acquisition: ${employee.acquisition}',
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                // TextButton(
+                                //   onPressed: () {
+                                //     showDialog(
+                                //       context: context,
+                                //       builder: (BuildContext context) {
+                                //         return AlertDialog(
+                                //           title: Text(
+                                //             'Delete Confirmation',
+                                //             style: TextStyle(
+                                //               fontWeight: FontWeight.bold,
+                                //               color: Colors.black,
+                                //               fontSize: 15,
+                                //             ),
+                                //           ),
+                                //           content: Text(
+                                //             'Are you sure you want to delete this client?',
+                                //           ),
+                                //           actions: [
+                                //             TextButton(
+                                //               child: Text('Cancel'),
+                                //               onPressed: () {
+                                //                 Navigator.of(context).pop();
+                                //               },
+                                //             ),
+                                //             TextButton(
+                                //               child: Text(
+                                //                 'Delete',
+                                //                 style: TextStyle(color: Colors.red),
+                                //               ),
+                                //               onPressed: () {
+                                //                 Navigator.of(context).pop();
+                                //                 deleteEmployee(employee);
+                                //               },
+                                //             ),
+                                //           ],
+                                //         );
+                                //       },
+                                //     );
+                                //   },
+                                //   style: ElevatedButton.styleFrom(
+                                //     backgroundColor: Colors.white,
+                                //     foregroundColor: Colors.black,
+                                //     fixedSize: Size(500, 20),
+                                //   ),
+                                //   child: Text("Delete"),
+                                // ),
+                                // Padding(
+                                //   padding: EdgeInsets.only(bottom: 8.0),
+                                //   child: Row(
+                                //     children: [
+                                //       Expanded(
+                                //         child: Row(
+                                //           children: [
+                                //             Expanded(
+                                //               child: FloatingActionButton.extended(
+                                //                 onPressed: () {
+                                //                   showDialog(
+                                //                     context: context,
+                                //                     builder:
+                                //                         (BuildContext context) {
+                                //                       return AlertDialog(
+                                //                         title: Text(
+                                //                           'Delete Confirmation',
+                                //                           style: TextStyle(
+                                //                             fontWeight:
+                                //                                 FontWeight.bold,
+                                //                             color: Colors.black,
+                                //                             fontSize: 15,
+                                //                           ),
+                                //                         ),
+                                //                         content: Text(
+                                //                           'Are you sure you want to delete this client?',
+                                //                         ),
+                                //                         actions: [
+                                //                           TextButton(
+                                //                             child: Text('Cancel'),
+                                //                             onPressed: () {
+                                //                               Navigator.of(context)
+                                //                                   .pop();
+                                //                             },
+                                //                           ),
+                                //                           TextButton(
+                                //                             child: Text(
+                                //                               'Delete',
+                                //                               style: TextStyle(
+                                //                                   color:
+                                //                                       Colors.red),
+                                //                             ),
+                                //                             onPressed: () {
+                                //                               Navigator.of(context)
+                                //                                   .pop();
+                                //                               deleteEmployee(
+                                //                                   employee);
+                                //                             },
+                                //                           ),
+                                //                         ],
+                                //                       );
+                                //                     },
+                                //                   );
+                                //                 },
+                                //                 label: Row(
+                                //                   children: [
+                                //                     Text(
+                                //                       'Delete Client',
+                                //                       style: TextStyle(
+                                //                         fontSize: 15,
+                                //                         fontWeight: FontWeight.bold,
+                                //                         color: Colors.black,
+                                //                       ),
+                                //                     ),
+                                //                     Icon(
+                                //                       Icons.delete,
+                                //                       size: 25,
+                                //                       color: Color.fromARGB(
+                                //                           255, 53, 49, 49),
+                                //                     ),
+                                //                   ],
+                                //                 ),
+                                //                 backgroundColor: Colors.white,
+                                //               ),
+                                //             ),
+                                //           ],
+                                //         ),
+                                //       ),
+                                //     ],
+                                //   ),
+                                // ),
+                              ],
+                            ),
+                          ),
+                          Positioned(
+                            top: 8.0,
+                            left: 8.0,
+                            child: Hero(
+                              tag:
+                                  '${heroTag}_edit_button', // Unique hero tag for edit button
+                              child: IconButton(
+                                icon: const Icon(Icons.edit),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => AddedClients(
+                                        isEditing: true,
+                                        id: employee.id,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+          ),
+        ),
+      ]),
     );
   }
 }

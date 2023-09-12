@@ -22,13 +22,13 @@ class _FormScreenState extends State<FormScreen> {
 
   void initState() {
     super.initState();
-    check_if_already_login();
+    initializeSharedPreferences();
   }
 
-  void check_if_already_login() async {
+  void initializeSharedPreferences() async {
     logindata = await SharedPreferences.getInstance();
     newuser = (logindata.getBool('login') ?? true);
-    if (newuser == false) {
+    if (!newuser) {
       Navigator.pushNamed(context, "/root");
     }
   }
@@ -91,6 +91,7 @@ class _FormScreenState extends State<FormScreen> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
+        //To prevent pixel overflow wrap with SingleChildScrollView
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 60),
           child: Form(
