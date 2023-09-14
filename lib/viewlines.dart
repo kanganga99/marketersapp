@@ -386,7 +386,7 @@ class EmployeeDataSource extends DataTableSource {
 
 class DatabaseHelper {
   static const String url =
-      "http://localhost/pesafy_marketers/view_clients.php";
+      "http://127.0.0.1/pesafy_marketers/view_clients.php";
   static Future<http.Response> getData() async {
     return await http.get(Uri.parse(url));
   }

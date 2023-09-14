@@ -145,15 +145,21 @@ class _RootState extends State<Root> {
 
   @override
   Widget build(BuildContext context) {
+    final userRole = 'marketer';
     return Scaffold(
       body: [
         ViewClients(
           employees: isLoading ? [] : employees,
           isLoading: isLoading,
         ),
-        Search(
-          employees: isLoading ? [] : employees,
-        ),
+        if (userRole == 'admin')
+          Search(
+            employees: isLoading ? [] : employees,
+          )
+        else
+          Search(
+            employees: isLoading ? [] : employees,
+          ),
         const AddedClients(
           isEditing: false,
           id: 0,
@@ -163,6 +169,7 @@ class _RootState extends State<Root> {
       bottomNavigationBar: CustomBottomNavigationBar(
         selectedIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
+        userRole: userRole,
       ),
     );
   }

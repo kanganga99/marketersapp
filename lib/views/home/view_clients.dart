@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:pesafy_marketer/search.dart';
 import 'add_clients3.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
@@ -27,13 +28,6 @@ class _ViewClientsState extends State<ViewClients> {
   };
   int selectedAcquisitionIndex = 0; // Default to "Not Yet"
   int selectedSegmentIndex = 0;
-
-  Future<void> refreshData() async {
-    // setState(() {
-    //   isLoading = true;
-    // });
-    // await fetchEmployeeData();
-  }
 
   Future<void> _handleRefresh() async {
     // await fetchEmployeeData();
@@ -152,15 +146,18 @@ class _ViewClientsState extends State<ViewClients> {
                 },
               ),
               SpeedDialChild(
-                child: const Icon(Icons.refresh_rounded),
-                backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                onTap: () {
-                  refreshData();
-                },
-              ),
+                  child: Icon(Icons.search),
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => Search(employees: List.from([])),
+                      ),
+                    );
+                  }),
             ],
           ),
         ),
@@ -446,6 +443,112 @@ class _ViewClientsState extends State<ViewClients> {
                                   );
                                 },
                               ),
+                            ),
+                          ),
+                          Positioned(
+                            top: 8.0,
+                            right: 8.0,
+                            child: IconButton(
+                              icon: Icon(Icons.add),
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return Center(
+                                      child: SizedBox(
+                                        height: 400,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(16),
+                                          child: Material(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(16)),
+                                            child: Container(
+                                              width: double.infinity,
+                                              padding: EdgeInsets.all(16),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                color: Colors.white,
+                                              ),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    'Attach Sale',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  SizedBox(height: 10),
+                                                  TextFormField(
+                                                    keyboardType:
+                                                        TextInputType.text,
+                                                    decoration:
+                                                        const InputDecoration(
+                                                      labelText: 'Nature',
+                                                      border:
+                                                          OutlineInputBorder(),
+                                                      prefixIcon:
+                                                          Icon(Icons.nature),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  TextFormField(
+                                                    keyboardType:
+                                                        TextInputType.text,
+                                                    decoration:
+                                                        const InputDecoration(
+                                                      labelText: 'Nature',
+                                                      border:
+                                                          OutlineInputBorder(),
+                                                      prefixIcon:
+                                                          Icon(Icons.nature),
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 10),
+                                                  TextFormField(
+                                                    keyboardType:
+                                                        TextInputType.text,
+                                                    decoration:
+                                                        const InputDecoration(
+                                                      labelText: 'Nature',
+                                                      border:
+                                                          OutlineInputBorder(),
+                                                      prefixIcon:
+                                                          Icon(Icons.nature),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  TextButton(
+                                                    child: Text('Save'),
+                                                    style: TextButton.styleFrom(
+                                                        backgroundColor:
+                                                            Colors.cyan[400],
+                                                        foregroundColor:
+                                                            Colors.white,
+                                                        fixedSize: Size(
+                                                            double.maxFinite,
+                                                            20)),
+                                                    onPressed: () {},
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
                             ),
                           ),
                         ],

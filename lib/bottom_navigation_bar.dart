@@ -4,10 +4,12 @@ import 'views/home/add_clients3.dart';
 class CustomBottomNavigationBar extends StatefulWidget {
   final int selectedIndex;
   final Function(int) onItemTapped;
+  final String userRole;
 
   const CustomBottomNavigationBar({
     required this.selectedIndex,
     required this.onItemTapped,
+    required this.userRole,
   });
 
   @override
@@ -21,16 +23,23 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
+    final role = widget.userRole;
     return BottomNavigationBar(
-      items: const <BottomNavigationBarItem>[
+      items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
           label: 'Home',
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.search),
-          label: 'Search',
-        ),
+        if (role == 'admin')
+          BottomNavigationBarItem(
+            icon: Icon(Icons.card_travel),
+            label: 'Sales',
+          )
+        else
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Search',
+          ),
         BottomNavigationBarItem(
           icon: Icon(Icons.add),
           label: "Add",
