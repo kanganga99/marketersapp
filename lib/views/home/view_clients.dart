@@ -530,13 +530,13 @@ class _ViewClientsState extends State<ViewClients> {
                                                   TextButton(
                                                     child: Text('Save'),
                                                     style: TextButton.styleFrom(
-                                                        backgroundColor:
-                                                            Colors.cyan[400],
-                                                        foregroundColor:
-                                                            Colors.white,
-                                                        fixedSize: Size(
-                                                            double.maxFinite,
-                                                            20)),
+                                                      backgroundColor:
+                                                          Colors.cyan[400],
+                                                      foregroundColor:
+                                                          Colors.white,
+                                                      fixedSize: Size(
+                                                          double.maxFinite, 20),
+                                                    ),
                                                     onPressed: () {},
                                                   ),
                                                 ],
