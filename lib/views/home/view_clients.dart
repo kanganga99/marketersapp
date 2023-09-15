@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:pesafy_marketer/search.dart';
@@ -20,6 +21,7 @@ class _ViewClientsState extends State<ViewClients> {
   late List<Employee2> filteredEmployees = List.from(
     widget.employees.where((element) => element.acquisition == "First Time"),
   );
+
   late EmployeeDataSource employeeDataSource;
   final Map<int, String> acquisitionTypes = {
     0: "First Time",
@@ -28,6 +30,44 @@ class _ViewClientsState extends State<ViewClients> {
   };
   int selectedAcquisitionIndex = 0; // Default to "Not Yet"
   int selectedSegmentIndex = 0;
+  final _formKey = GlobalKey<FormState>();
+  final serviceController = TextEditingController();
+  final amountController = TextEditingController();
+  final transaction_codeController = TextEditingController();
+
+  @override
+  void dispose() {
+    serviceController.dispose();
+    amountController.dispose();
+    transaction_codeController.dispose();
+    super.dispose();
+  }
+
+  Future<http.Response> makeSale(
+    String service,
+    String amount,
+    String transaction_code,
+  ) async {
+    final response = await http.post(
+      Uri.parse('http://192.168.0.19/pesafy_marketers/sales.php'),
+      headers: <String, String>{
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      },
+      body:
+          'service=$service&amount=$amount&transaction_code=$transaction_code',
+    );
+    return response;
+  }
+
+  void showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.grey[800],
+      textColor: Colors.white,
+    );
+  }
 
   Future<void> _handleRefresh() async {
     // await fetchEmployeeData();
@@ -51,49 +91,6 @@ class _ViewClientsState extends State<ViewClients> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      // automaticallyImplyLeading: false, // Remove the back icon
-      // titleSpacing: 15, // Remove the default padding around the title
-      // centerTitle: true,
-      // bottom: PreferredSize(
-      //   preferredSize: Size.fromHeight(10.0),
-      //   child: Padding(
-      //     padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      //     child: CupertinoSegmentedControl<int>(
-      //       borderColor: Colors.blueGrey,
-      //       selectedColor: Colors.white,
-      //       unselectedColor: Colors.blueGrey,
-      //       groupValue: selectedSegmentIndex,
-      //       children: {
-      //         0: Text('First Time'),
-      //         1: Text('On Boarded'),
-      //         2: Text('Not Yet'),
-      //       },
-      //       onValueChanged: (index) {
-      //         setState(() {
-      //           selectedSegmentIndex = index;
-      //         });
-      //       },
-      //     ),
-      //   ),
-      // ),
-      // actions: [
-      //   IconButton(
-      //     onPressed: () {
-      //       Navigator.push(
-      //         context,
-      //         MaterialPageRoute(
-      //           builder: (context) => const AddedClients(
-      //             isEditing: false,
-      //             id: 0,
-      //           ),
-      //         ),
-      //       );
-      //     },
-      //     icon: const Icon(Icons.add),
-      //   ),
-      // ],
-      // ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(
           bottom: 16.0,
@@ -154,7 +151,8 @@ class _ViewClientsState extends State<ViewClients> {
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => Search(employees: List.from([])),
+                        builder: (context) =>
+                            Search(employees: List.from(widget.employees)),
                       ),
                     );
                   }),
@@ -456,7 +454,7 @@ class _ViewClientsState extends State<ViewClients> {
                                   builder: (BuildContext context) {
                                     return Center(
                                       child: SizedBox(
-                                        height: 400,
+                                        height: 420,
                                         child: Padding(
                                           padding: const EdgeInsets.all(16),
                                           child: Material(
@@ -471,75 +469,154 @@ class _ViewClientsState extends State<ViewClients> {
                                                     BorderRadius.circular(15),
                                                 color: Colors.white,
                                               ),
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    'Attach Sale',
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                  SizedBox(height: 10),
-                                                  TextFormField(
-                                                    keyboardType:
-                                                        TextInputType.text,
-                                                    decoration:
-                                                        const InputDecoration(
-                                                      labelText: 'Nature',
-                                                      border:
-                                                          OutlineInputBorder(),
-                                                      prefixIcon:
-                                                          Icon(Icons.nature),
+                                              child: Form(
+                                                key: _formKey,
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Attach Sale',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold),
                                                     ),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  TextFormField(
-                                                    keyboardType:
-                                                        TextInputType.text,
-                                                    decoration:
-                                                        const InputDecoration(
-                                                      labelText: 'Nature',
-                                                      border:
-                                                          OutlineInputBorder(),
-                                                      prefixIcon:
-                                                          Icon(Icons.nature),
+                                                    SizedBox(height: 10),
+                                                    TextFormField(
+                                                      keyboardType:
+                                                          TextInputType.text,
+                                                      controller:
+                                                          serviceController,
+                                                      decoration:
+                                                          const InputDecoration(
+                                                        labelText: 'Service',
+                                                        border:
+                                                            OutlineInputBorder(),
+                                                        prefixIcon:
+                                                            Icon(Icons.nature),
+                                                      ),
+                                                      validator: (value) {
+                                                        if (value == null ||
+                                                            value.isEmpty) {
+                                                          return 'Please enter service sold';
+                                                        } else
+                                                          return null;
+                                                      },
                                                     ),
-                                                  ),
-                                                  SizedBox(height: 10),
-                                                  TextFormField(
-                                                    keyboardType:
-                                                        TextInputType.text,
-                                                    decoration:
-                                                        const InputDecoration(
-                                                      labelText: 'Nature',
-                                                      border:
-                                                          OutlineInputBorder(),
-                                                      prefixIcon:
-                                                          Icon(Icons.nature),
+                                                    SizedBox(
+                                                      height: 10,
                                                     ),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  TextButton(
-                                                    child: Text('Save'),
-                                                    style: TextButton.styleFrom(
-                                                      backgroundColor:
-                                                          Colors.cyan[400],
-                                                      foregroundColor:
-                                                          Colors.white,
-                                                      fixedSize: Size(
-                                                          double.maxFinite, 20),
+                                                    TextFormField(
+                                                      keyboardType:
+                                                          TextInputType.text,
+                                                      controller:
+                                                          amountController,
+                                                      decoration:
+                                                          const InputDecoration(
+                                                        labelText: 'Amount',
+                                                        border:
+                                                            OutlineInputBorder(),
+                                                        prefixIcon:
+                                                            Icon(Icons.money),
+                                                      ),
+                                                      validator: (value) {
+                                                        if (value == null ||
+                                                            value.isEmpty) {
+                                                          return 'Please enter amount';
+                                                        } else
+                                                          return null;
+                                                      },
                                                     ),
-                                                    onPressed: () {},
-                                                  ),
-                                                ],
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    TextFormField(
+                                                      keyboardType:
+                                                          TextInputType.text,
+                                                      controller:
+                                                          transaction_codeController,
+                                                      decoration:
+                                                          const InputDecoration(
+                                                        labelText:
+                                                            'Transaction Code',
+                                                        border:
+                                                            OutlineInputBorder(),
+                                                        prefixIcon:
+                                                            Icon(Icons.code),
+                                                      ),
+                                                      validator: (value) {
+                                                        if (value == null ||
+                                                            value.isEmpty) {
+                                                          return 'Please enter transaction code';
+                                                        } else
+                                                          return null;
+                                                      },
+                                                    ),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    TextButton(
+                                                      child: Text('Save'),
+                                                      style:
+                                                          TextButton.styleFrom(
+                                                        backgroundColor:
+                                                            Colors.blueGrey,
+                                                        foregroundColor:
+                                                            Colors.white,
+                                                        fixedSize: Size(
+                                                            double.maxFinite,
+                                                            20),
+                                                      ),
+                                                      onPressed: () async {
+                                                        if (_formKey
+                                                            .currentState!
+                                                            .validate()) {
+                                                          final service =
+                                                              serviceController
+                                                                  .text;
+                                                          final amount =
+                                                              amountController
+                                                                  .text;
+                                                          final transaction_code =
+                                                              transaction_codeController
+                                                                  .text;
+
+                                                          final response =
+                                                              await makeSale(
+                                                            service,
+                                                            amount,
+                                                            transaction_code,
+                                                          );
+
+                                                          if (response
+                                                                  .statusCode ==
+                                                              200) {
+                                                            showToast(
+                                                                'Sale Completed');
+                                                            print(
+                                                                'Form submitted successfully');
+                                                            Navigator.pushNamed(
+                                                                context, "/");
+                                                          } else {
+                                                            throw Exception(
+                                                                'Failed to submit form');
+                                                          }
+
+                                                          // Clear the form fields
+                                                          serviceController
+                                                              .clear();
+                                                          amountController
+                                                              .clear();
+                                                          transaction_codeController
+                                                              .clear();
+                                                          // }
+                                                        }
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ),

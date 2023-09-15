@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pesafy_marketer/views/home/sales.dart';
 import 'package:pesafy_marketer/views/profile/profile.dart';
 import 'package:pesafy_marketer/search.dart';
 import './views/home/view_clients.dart';
@@ -145,7 +146,7 @@ class _RootState extends State<Root> {
 
   @override
   Widget build(BuildContext context) {
-    final userRole = 'marketer';
+    final userRole = 'admin';
     return Scaffold(
       body: [
         ViewClients(
@@ -153,9 +154,10 @@ class _RootState extends State<Root> {
           isLoading: isLoading,
         ),
         if (userRole == 'admin')
-          Search(
-            employees: isLoading ? [] : employees,
-          )
+          // Search(
+          //   employees: isLoading ? [] : employees,
+          // )
+          Sales()
         else
           Search(
             employees: isLoading ? [] : employees,

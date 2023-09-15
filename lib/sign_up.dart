@@ -245,28 +245,27 @@ class _SignUpState extends State<SignUp> {
                         //     ),
                         //   );
                         // } else {
-                          // Register the user only if email doesn't exist
-                          final response = await registerUser(
-                            username,
-                            phone,
-                            email,
-                            password,
-                          );
+                        // Register the user only if email doesn't exist
+                        final response = await registerUser(
+                          username,
+                          phone,
+                          email,
+                          password,
+                        );
 
-                          if (response.statusCode == 200) {
-                            showToast('Registered successfully');
-                            print('Form submitted successfully');
-                            Navigator.pushNamed(context, "/");
-                          } else {
-                            throw Exception('Failed to submit form');
-                          }
-
-                          // Clear the form fields
-                          nameController.clear();
-                          phoneController.clear();
-                          emailController.clear();
-                          passController.clear();
-                          confirmPassController.clear();
+                        if (response.statusCode == 200) {
+                          showToast('Registered successfully');
+                          print('Form submitted successfully');
+                          Navigator.pushNamed(context, "/");
+                        } else {
+                          throw Exception('Failed to submit form');
+                        }
+                        // Clear the form fields
+                        nameController.clear();
+                        phoneController.clear();
+                        emailController.clear();
+                        passController.clear();
+                        confirmPassController.clear();
                         // }
                       }
                     },
