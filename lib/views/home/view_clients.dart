@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:pesafy_marketer/main.dart';
 import 'package:pesafy_marketer/search.dart';
+import 'package:pesafy_marketer/views/home/sales.dart';
 import 'add_clients3.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
@@ -25,8 +27,8 @@ class _ViewClientsState extends State<ViewClients> {
   late EmployeeDataSource employeeDataSource;
   final Map<int, String> acquisitionTypes = {
     0: "First Time",
-    1: "On Boarded",
-    2: "Not Yet",
+    1: "Intrested",
+    2: "On Boarded",
   };
   int selectedAcquisitionIndex = 0; // Default to "Not Yet"
   int selectedSegmentIndex = 0;
@@ -48,13 +50,15 @@ class _ViewClientsState extends State<ViewClients> {
     String amount,
     String transaction_code,
   ) async {
+    int? uid = globalPrefs!.getInt('id');
+    print('UID from SharedPreferences: $uid');
     final response = await http.post(
-      Uri.parse('http://192.168.0.19/pesafy_marketers/sales.php'),
+      Uri.parse('https://api.pesafy.africa/marketers/sales.php'),
       headers: <String, String>{
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       },
       body:
-          'service=$service&amount=$amount&transaction_code=$transaction_code',
+          'service=$service&amount=$amount&transaction_code=$transaction_code&uid=$uid',
     );
     return response;
   }
@@ -64,7 +68,7 @@ class _ViewClientsState extends State<ViewClients> {
       msg: message,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
-      backgroundColor: Colors.grey[800],
+      backgroundColor: Colors.blueGrey,
       textColor: Colors.white,
     );
   }
@@ -89,6 +93,8 @@ class _ViewClientsState extends State<ViewClients> {
   }
 
   @override
+
+  
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: Padding(
@@ -184,7 +190,7 @@ class _ViewClientsState extends State<ViewClients> {
               height: 40,
               child: Center(
                 child: Text(
-                  'On Boarded',
+                  'Intrested',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
@@ -196,7 +202,7 @@ class _ViewClientsState extends State<ViewClients> {
               height: 40,
               child: Center(
                 child: Text(
-                  'Not Yet',
+                  'On Boarded',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
@@ -424,23 +430,20 @@ class _ViewClientsState extends State<ViewClients> {
                           Positioned(
                             top: 8.0,
                             left: 8.0,
-                            child: Hero(
-                              tag:
-                                  '${heroTag}_edit_button', // Unique hero tag for edit button
-                              child: IconButton(
-                                icon: const Icon(Icons.edit),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => AddedClients(
-                                        isEditing: true,
-                                        id: employee.id,
-                                      ),
+                            child: IconButton(
+                              icon: const Icon(Icons.edit),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AddedClients(
+                                      isEditing: true,
+                                      id: employee.id,
+                                      uid: globalPrefs!.getInt('id') ?? 0,
                                     ),
-                                  );
-                                },
-                              ),
+                                  ),
+                                );
+                              },
                             ),
                           ),
                           Positioned(
@@ -691,40 +694,9 @@ class EmployeeDataSource extends DataTableSource {
                   builder: (context) => AddedClients(
                     isEditing: true,
                     id: employee.id,
+                    uid: globalPrefs!.getInt('id') ?? 0,
                   ),
                 ),
-              );
-            },
-          ),
-        ),
-        DataCell(
-          IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text('Delete Confirmation'),
-                    content: const Text(
-                        'Are you sure you want to delete this record?'),
-                    actions: [
-                      TextButton(
-                        child: const Text('Cancel'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      TextButton(
-                        child: const Text('Delete'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          deleteEmployee(employee);
-                        },
-                      ),
-                    ],
-                  );
-                },
               );
             },
           ),
@@ -743,10 +715,10 @@ class EmployeeDataSource extends DataTableSource {
   int get selectedRowCount => 0;
 }
 
-class DatabaseHelper {
-  static Future<http.Response> getData() async {
-    String uri = "https://api.pesafy.africa/marketers/view_clients.php";
-    var res = await http.get(Uri.parse(uri));
-    return res;
-  }
-}
+// class DatabaseHelper {
+//   static Future<http.Response> getData() async {
+//     String uri = "https://api.pesafy.africa/marketers/view_clients1.php";
+//     var res = await http.get(Uri.parse(uri));
+//     return res;
+//   }
+// }

@@ -1,18 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
-class User {
-  late final String username;
-  final String phone;
-  final String email;
-
-  User({
-    required this.username,
-    required this.phone,
-    required this.email,
-  });
-}
+import 'package:pesafy_marketer/main.dart';
+import 'package:pesafy_marketer/views/profile/marketersales.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -20,44 +10,15 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  User? userProfile;
-
+  // User? userProfile;
+  var username = globalPrefs!.getString('username');
+  var phone = globalPrefs!.getString('phone');
+  var email = globalPrefs!.getString('email');
+  var password = globalPrefs!.getString('password');
   @override
   void initState() {
     super.initState();
-    fetchUserData();
-  }
-
-  Future<void> fetchUserData() async {
-    try {
-      String apiUrl = "http://localhost/pesafy_marketers/get_onboarded.php";
-      var res = await http.get(Uri.parse(apiUrl));
-      if (res.statusCode == 200) {
-        var data = jsonDecode(res.body);
-        List<String> businessNames = [];
-        for (var clientData in data) {
-          String businessName = clientData['business_name'];
-          businessNames.add(businessName);
-        }
-        setState(() {
-          userProfile = User(
-            username:
-                'Loading...', // Set a default value for username (if needed)
-            phone: 'Loading...', // Set a default value for phone (if needed)
-            email: 'Loading...', // Set a default value for email (if needed)
-          );
-          // Show only the first business_name in the list, assuming there is at least one client
-          if (businessNames.isNotEmpty) {
-            userProfile?.username = businessNames.first;
-          }
-        });
-      } else {
-        // Handle API error or data not found
-      }
-    } catch (e) {
-      // Handle network or decoding error
-      print(e);
-    }
+    // fetchUserData();
   }
 
   @override
@@ -75,26 +36,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
               alignment: Alignment.center,
               children: [
                 CircleAvatar(
-                  radius: 60,
+                  radius: 50,
                   backgroundImage: AssetImage('images/login.jpeg'),
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
             Text(
-              userProfile?.username ?? 'Loading...',
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              'Welcome.',
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
             Text(
-              userProfile?.phone ?? 'Loading...',
-              style: const TextStyle(fontSize: 18, color: Colors.grey),
+              (username ?? 'Loading...'),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             _buildDetailsCard(),
-            const SizedBox(height: 20),
-            _buildProjectsCard(),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
+            _buildClickableCard(),
           ],
         ),
       ),
@@ -116,18 +75,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 10),
             ListTile(
               leading: const Icon(Icons.email),
-              title: const Text('Email'),
-              subtitle: Text(userProfile?.email ?? 'Loading...'),
+              title: Text('Email'),
+              subtitle: Text(email ?? 'Loading'),
             ),
             ListTile(
               leading: const Icon(Icons.phone),
               title: const Text('Phone'),
-              subtitle: Text(userProfile?.phone ?? 'Loading...'),
-            ),
-            const ListTile(
-              leading: Icon(Icons.location_on),
-              title: Text('Location'),
-              subtitle: Text('Kasarani Goshen Gardens'),
+              subtitle:
+                  Text(phone ?? 'Loading...'), // Use the phone variable here
             ),
           ],
         ),
@@ -135,32 +90,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildProjectsCard() {
-    return const Card(
-      margin: EdgeInsets.symmetric(horizontal: 16),
-      child: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Clients',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+  Widget _buildClickableCard() {
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      child: InkWell(
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => MarketersSales(sales: [],),
             ),
-            SizedBox(height: 10),
-            ListTile(
-              title: Text('Client 1'),
-              subtitle: Text('Queens Classy'),
-            ),
-            ListTile(
-              title: Text('Client 2'),
-              subtitle: Text('TECH GIANT'),
-            ),
-            ListTile(
-              title: Text('Client 3'),
-              subtitle: Text('Belani SPA'),
-            ),
-          ],
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Sales Breakdown',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blueGrey,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

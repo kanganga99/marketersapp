@@ -46,15 +46,20 @@ class _FormScreenState extends State<FormScreen> {
           fontSize: 16.0,
         );
       } else {
-        var url = Uri.parse('https://api.pesafy.africa/marketers/login.php');
+        var url = Uri.parse('https://api.pesafy.africa/marketers/login1.php');
         var response = await http.post(url, body: {
           "email": email.text,
           "password": password.text,
         });
         var data = json.decode(response.body);
-        if (data == "success") {
+        if (data['status'] == "success") {
+          //  String userRole = data['data']['userRole'];
           logindata.setBool('login', false);
           logindata.setString('email', email.text);
+          logindata.setInt('id', data['data']['id']); // Store user ID
+          logindata.setString('username', data['data']['username']); 
+          logindata.setString('phone', data['data']['phone']); 
+          logindata.setString('userRole', data['data']['userRole']); 
           Fluttertoast.showToast(
             msg: "Login Successful",
             toastLength: Toast.LENGTH_SHORT,
@@ -64,7 +69,7 @@ class _FormScreenState extends State<FormScreen> {
             textColor: Colors.white,
             fontSize: 16.0,
           );
-          Navigator.pushNamed(context, "/root");
+          Navigator.pushNamed(context, "/");
           email.clear();
           password.clear();
         } else {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesafy_marketer/main.dart';
 import 'views/home/add_clients3.dart';
 import './views/home/view_clients.dart';
 
@@ -296,6 +297,7 @@ class _SearchState extends State<Search> {
                                 builder: (context) => AddedClients(
                                   isEditing: true,
                                   id: employee.id,
+                                  uid: globalPrefs!.getInt('id') ?? 0,
                                 ),
                               ),
                             );

@@ -37,8 +37,8 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
           )
         else
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
+            icon: Icon(Icons.card_travel),
+            label: 'Sales',
           ),
         BottomNavigationBarItem(
           icon: Icon(Icons.add),
@@ -60,24 +60,12 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         widget.onItemTapped(index);
         switch (index) {
           case 0:
-            // Navigator.pushNamed(context, "/home");
             break;
           case 1:
-            // Navigator.pushNamed(context, "/search");
             break;
           case 2:
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => const AddedClients(
-            //       isEditing: false,
-            //       id: 0,
-            //     ),
-            //   ),
-            // );
             break;
           case 3:
-            // Navigator.pushNamed(context, "/profile");
             break;
         }
       },

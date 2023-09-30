@@ -14,7 +14,8 @@ class _EmployeesViewState extends State<EmployeesView> {
   EmployeeDataSource employeeDataSource = EmployeeDataSource([]);
   get _column => <GridColumn>[
         GridColumn(columnName: 'id', label: const Text('ID')),
-        GridColumn(columnName: 'business_name', label: const Text('Business Name')),
+        GridColumn(
+            columnName: 'business_name', label: const Text('Business Name')),
         GridColumn(columnName: 'contact', label: const Text('Contact')),
         GridColumn(columnName: 'location', label: const Text('Location')),
         GridColumn(columnName: 'nature', label: const Text('Nature')),

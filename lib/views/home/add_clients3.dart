@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:pesafy_marketer/main.dart';
 import 'package:pesafy_marketer/rootapp.dart';
 
 class Employee {
@@ -27,11 +28,13 @@ Employee? editingEmployee;
 class AddedClients extends StatefulWidget {
   final bool isEditing;
   final int id;
+  final int uid;
 
   const AddedClients({
     Key? key,
     required this.isEditing,
     required this.id,
+    required this.uid,
   }) : super(key: key);
 
   @override
@@ -43,11 +46,12 @@ class _AddedClientsState extends State<AddedClients> {
   TextEditingController contactController = TextEditingController();
   TextEditingController locationController = TextEditingController();
   TextEditingController natureController = TextEditingController();
+  // TextEditingController uidController = TextEditingController();
 
   List<String> acquisitionOptions = [
     'First Time',
+    'Intrested',
     'On Boarded',
-    'Not Yet',
   ];
   String selectedAcquisition = "First Time";
 
@@ -90,9 +94,7 @@ class _AddedClientsState extends State<AddedClients> {
     });
 
     if (response.statusCode == 200) {
-      // Parse the response body to get the employee data
       Map<String, dynamic> data = json.decode(response.body);
-      // Set the initial values of the text controllers with the employee data
       setState(() {
         editedEmployee = Employee(
           id: editedEmployee.id,
@@ -117,6 +119,9 @@ class _AddedClientsState extends State<AddedClients> {
 
   void addOrUpdateEmployee() async {
     var url;
+    int? uid = globalPrefs!.getInt('id') ; 
+    print('UID from SharedPreferences: $uid');
+
     if (isEditing) {
       url = Uri.parse('https://api.pesafy.africa/marketers/update_clients.php');
     } else {
@@ -130,8 +135,9 @@ class _AddedClientsState extends State<AddedClients> {
       'location': locationController.text,
       'nature': natureController.text,
       'acquisition': selectedAcquisition,
+      'uid': uid.toString(),
     });
-
+      
     if (response.statusCode == 200) {
       showToast(isEditing ? 'Record updated' : 'Record added');
       Navigator.pushReplacement(
@@ -225,6 +231,21 @@ class _AddedClientsState extends State<AddedClients> {
                     return null;
                   },
                 ),
+                //  TextFormField(
+                //   keyboardType: TextInputType.text,
+                //   controller: uidController,
+                //   decoration: const InputDecoration(
+                //     labelText: 'UID',
+                //     border: OutlineInputBorder(),
+                //     prefixIcon: Icon(Icons.nature),
+                //   ),
+                //   validator: (value) {
+                //     if (value == null || value.isEmpty) {
+                //       return "Please enter nature of the business";
+                //     }
+                //     return null;
+                //   },
+                // ),
                 const SizedBox(height: 20),
                 DropdownButtonFormField<String>(
                   value: selectedAcquisition,

@@ -2,6 +2,9 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pesafy_marketer/admin/profile.dart';
+import 'package:pesafy_marketer/admin/sales.dart';
+import 'package:pesafy_marketer/main.dart';
 import 'package:pesafy_marketer/views/home/sales.dart';
 import 'package:pesafy_marketer/views/profile/profile.dart';
 import 'package:pesafy_marketer/search.dart';
@@ -19,6 +22,7 @@ class Root extends StatefulWidget {
 class _RootState extends State<Root> {
   int _selectedIndex = 0;
   bool isLoading = true;
+  var role = globalPrefs!.getString('userRole');
   List<Employee2> employees = <Employee2>[];
 
   late EmployeeDataSource employeeDataSource;
@@ -96,11 +100,21 @@ class _RootState extends State<Root> {
   }
 
   Future<void> fetchEmployeeData() async {
-    final response = await DatabaseHelper.getData();
+    var url = 'https://api.pesafy.africa/marketers/view_clients1.php';
+    var response = await http.get(Uri.parse(url));
     print(response.body);
     if (response.statusCode == 200) {
       dynamic responseData = jsonDecode(response.body);
-      List<dynamic> data = responseData;
+      List<dynamic> data1 = responseData;
+      var role = globalPrefs!.getString('userRole');
+      List<dynamic> data;
+      if (role != 'admin') {
+        var userid = globalPrefs!.getInt('id');
+        data = data1.where((element) => element['uid'] == '$userid').toList();
+      } else {
+        data = data1;
+      }
+
       if (data.isNotEmpty) {
         final List<Employee2> fetchedEmployees = data.map<Employee2>((item) {
           final int id = int.parse(item['id']);
@@ -129,8 +143,8 @@ class _RootState extends State<Root> {
           isLoading = false;
         });
       } else {
-        print('Invalid response data');
-        Fluttertoast.showToast(msg: 'Invalid response data');
+        print('No clients available yet');
+        Fluttertoast.showToast(msg: 'No clients available yet');
         setState(() {
           isLoading = false;
         });
@@ -146,27 +160,20 @@ class _RootState extends State<Root> {
 
   @override
   Widget build(BuildContext context) {
-    final userRole = 'admin';
+    final userRole = globalPrefs!.getString('userRole')!;
     return Scaffold(
       body: [
         ViewClients(
           employees: isLoading ? [] : employees,
           isLoading: isLoading,
         ),
-        if (userRole == 'admin')
-          // Search(
-          //   employees: isLoading ? [] : employees,
-          // )
-          Sales()
-        else
-          Search(
-            employees: isLoading ? [] : employees,
-          ),
-        const AddedClients(
+        if (userRole == 'admin') AdminSales() else Sales(sales: []),
+        AddedClients(
           isEditing: false,
           id: 0,
+          uid: globalPrefs!.getInt('id') ?? 0,
         ),
-        ProfileScreen(),
+        if (userRole == 'admin') AdminProfile() else ProfileScreen(),
       ][_selectedIndex],
       bottomNavigationBar: CustomBottomNavigationBar(
         selectedIndex: _selectedIndex,
