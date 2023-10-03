@@ -18,7 +18,7 @@ class _AllBreakDownState extends State<AllBreakDown> {
       dynamic responseData = jsonDecode(response.body);
       List<dynamic> sales = responseData;
       print(sales);
-      return sales; // Return the filtered sales data
+      return sales;
     } else {
       throw Exception('Failed to load sales data');
     }
@@ -28,7 +28,7 @@ class _AllBreakDownState extends State<AllBreakDown> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         title: const Text('Transactions Breakdown'),
         centerTitle: true,
       ),
@@ -56,8 +56,7 @@ class _AllBreakDownState extends State<AllBreakDown> {
                     subtitle: Column(
                       children: [
                         Text('Amount: ${salesData[index]['amount']}'),
-                        Text(
-                            'Transaction Code: ${salesData[index]['transaction_code']}'),
+                        Text('Transaction Code: ${salesData[index]['transaction_code']}'),
                       ],
                     ),
                   ),

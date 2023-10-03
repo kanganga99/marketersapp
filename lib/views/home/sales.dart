@@ -52,7 +52,8 @@ class _SalesState extends State<Sales> {
             return Center(child: Text('No data available'));
           } else {
             double totalAmount = snapshot.data!;
-            double commission = totalAmount * 0.10; // Calculate commission (10% of totalAmount)
+            double commission =
+                totalAmount * 0.10; // Calculate commission (10% of totalAmount)
             return Container(
               height: 250,
               child: Card(

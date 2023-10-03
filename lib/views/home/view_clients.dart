@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -20,6 +22,38 @@ class ViewClients extends StatefulWidget {
 }
 
 class _ViewClientsState extends State<ViewClients> {
+  Future<void> deleteEmployee(Employee employee) async {
+    try {
+      String uri = "https://api.pesafy.africa/marketers/delete_clients.php";
+      var res =
+          await http.post(Uri.parse(uri), body: {"id": employee.id.toString()});
+      var response = jsonDecode(res.body);
+      if (response["success"] == "true") {
+        Fluttertoast.showToast(
+          msg: "Record Deleted",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM_RIGHT,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: "Record Not Deleted",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM_RIGHT,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   late List<Employee2> filteredEmployees = List.from(
     widget.employees.where((element) => element.acquisition == "First Time"),
   );
@@ -27,7 +61,7 @@ class _ViewClientsState extends State<ViewClients> {
   late EmployeeDataSource employeeDataSource;
   final Map<int, String> acquisitionTypes = {
     0: "First Time",
-    1: "Intrested",
+    1: "Interested",
     2: "On Boarded",
   };
   int selectedAcquisitionIndex = 0; // Default to "Not Yet"
@@ -93,8 +127,6 @@ class _ViewClientsState extends State<ViewClients> {
   }
 
   @override
-
-  
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: Padding(
@@ -190,7 +222,7 @@ class _ViewClientsState extends State<ViewClients> {
               height: 40,
               child: Center(
                 child: Text(
-                  'Intrested',
+                  'Interested',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
@@ -631,6 +663,15 @@ class _ViewClientsState extends State<ViewClients> {
                               },
                             ),
                           ),
+                          Positioned(
+                            bottom: 8.0,
+                            right: 8.0,
+                            child: TextButton(
+                              onPressed: () {},
+                              child: Text('Assign'),
+                              
+                            ),
+                          )
                         ],
                       );
                     },

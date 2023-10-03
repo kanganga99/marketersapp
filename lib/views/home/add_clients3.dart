@@ -50,7 +50,7 @@ class _AddedClientsState extends State<AddedClients> {
 
   List<String> acquisitionOptions = [
     'First Time',
-    'Intrested',
+    'Interested',
     'On Boarded',
   ];
   String selectedAcquisition = "First Time";
@@ -119,7 +119,7 @@ class _AddedClientsState extends State<AddedClients> {
 
   void addOrUpdateEmployee() async {
     var url;
-    int? uid = globalPrefs!.getInt('id') ; 
+    int? uid = globalPrefs!.getInt('id');
     print('UID from SharedPreferences: $uid');
 
     if (isEditing) {
@@ -137,7 +137,7 @@ class _AddedClientsState extends State<AddedClients> {
       'acquisition': selectedAcquisition,
       'uid': uid.toString(),
     });
-      
+
     if (response.statusCode == 200) {
       showToast(isEditing ? 'Record updated' : 'Record added');
       Navigator.pushReplacement(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:pesafy_marketer/main.dart';
+import 'package:pesafy_marketer/views/profile/marketerclients_summary.dart';
 import 'package:pesafy_marketer/views/profile/marketersales.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -54,6 +55,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _buildDetailsCard(),
             const SizedBox(height: 10),
             _buildClickableCard(),
+            SizedBox(height: 10),
+            _buildClientsSummary(),
           ],
         ),
       ),
@@ -97,7 +100,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => MarketersSales(sales: [],),
+              builder: (context) => MarketersSales(
+                sales: [],
+              ),
             ),
           );
         },
@@ -108,6 +113,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               Text(
                 'Sales Breakdown',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blueGrey,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildClientsSummary() {
+    return Card(
+      margin: EdgeInsets.symmetric(horizontal: 16),
+      child: InkWell(
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => MarketerClientsSummary(),
+            ),
+          );
+        },
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Customer Summary',
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,

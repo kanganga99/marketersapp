@@ -78,8 +78,7 @@ class _AdminSalesState extends State<AdminSales> {
       children: totalSalesByUid.entries.map((entry) {
         String uid = entry.key;
         double totalAmount = entry.value;
-        double commission =
-            totalAmount * 0.10; // Calculate the commission (10%)
+        double commission =totalAmount * 0.10; // Calculate the commission (10%)
         String username = userDataByUid[uid] ?? 'N/A';
         return Card(
             margin: EdgeInsets.all(8),

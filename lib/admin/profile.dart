@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesafy_marketer/admin/customer_summary.dart';
 import 'package:pesafy_marketer/admin/marketers.dart';
 import 'package:pesafy_marketer/admin/sales.dart';
 import 'package:pesafy_marketer/admin/salesbreakdown.dart';
@@ -58,6 +59,8 @@ class _AdminProfileState extends State<AdminProfile> {
             _buildMarketersCard(),
             SizedBox(height: 10),
             _buildSalesBreakdownCard(),
+            SizedBox(height: 10),
+            _buildCustomerSummaryCard(),
             SizedBox(height: 10),
           ],
         ),
@@ -144,6 +147,36 @@ class _AdminProfileState extends State<AdminProfile> {
             children: [
               Text(
                 'Sales Breakdown',
+                style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blueGrey),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCustomerSummaryCard() {
+    return Card(
+      margin: EdgeInsets.symmetric(horizontal: 16),
+      child: InkWell(
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => CustomerSummary(),
+            ),
+          );
+        },
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Customer Summary',
                 style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,

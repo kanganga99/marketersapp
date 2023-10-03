@@ -40,7 +40,7 @@ class _MarketersSalesState extends State<MarketersSales> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         title: const Text('Transactions Breakdown'),
         centerTitle: true,
       ),
