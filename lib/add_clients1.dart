@@ -26,7 +26,7 @@ Employee? editingEmployee; // Holds the employee being edited, if any
 
 class AddedClients extends StatefulWidget {
   final bool isEditing;
-  const AddedClients({Key? key, required this.isEditing}) : super(key: key);
+  const AddedClients({Key? key, required this.isEditing, required int id, required int uid}) : super(key: key);
 
   @override
   _AddedClientsState createState() => _AddedClientsState();

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pesafy_marketer/admin/profile.dart';
 import 'package:pesafy_marketer/admin/sales.dart';
+import 'package:pesafy_marketer/customer_service/profile.dart';
 import 'package:pesafy_marketer/main.dart';
 import 'package:pesafy_marketer/views/home/sales.dart';
 import 'package:pesafy_marketer/views/profile/profile.dart';
@@ -111,8 +112,18 @@ class _RootState extends State<Root> {
       if (role != 'admin') {
         var userid = globalPrefs!.getInt('id');
         data = data1.where((element) => element['uid'] == '$userid').toList();
+        print(data);
       } else {
         data = data1;
+      }
+      List<dynamic> customerservice;
+      if (role == 'customer service') {
+        var userassigned = globalPrefs!.getString('username');
+        customerservice = data1
+            .where((element) => element['user_assigned'] == '$userassigned')
+            .toList();
+      } else {
+        customerservice = data1;
       }
 
       if (data.isNotEmpty) {
@@ -149,6 +160,42 @@ class _RootState extends State<Root> {
           isLoading = false;
         });
       }
+
+      if (customerservice.isNotEmpty) {
+        final List<Employee2> fetchedEmployees =
+            customerservice.map<Employee2>((item) {
+          final int id = int.parse(item['id']);
+          final String businessName = item['business_name'];
+          final String contact = item['contact'];
+          final String location = item['location'];
+          final String nature = item['nature'];
+          final String acquisition = item['acquisition'];
+          return Employee2(
+            id: id,
+            businessName: businessName,
+            contact: contact,
+            location: location,
+            nature: nature,
+            acquisition: acquisition,
+          );
+        }).toList();
+        setState(() {
+          employees = fetchedEmployees;
+          employeeDataSource = EmployeeDataSource(
+            employeeData: employees,
+            deleteEmployee: deleteEmployee,
+            updateEmployee: updateEmployee,
+            context: context,
+          );
+          isLoading = false;
+        });
+      } else {
+        print('No clients available yet');
+        Fluttertoast.showToast(msg: 'No clients assigned yet');
+        setState(() {
+          isLoading = false;
+        });
+      }
     } else {
       print('Failed to fetch data');
       Fluttertoast.showToast(msg: 'Failed to fetch data');
@@ -173,7 +220,12 @@ class _RootState extends State<Root> {
           id: 0,
           uid: globalPrefs!.getInt('id') ?? 0,
         ),
-        if (userRole == 'admin') AdminProfile() else ProfileScreen(),
+        if (userRole == 'admin')
+          AdminProfile()
+        else if (userRole == 'marketer')
+          ProfileScreen()
+        else
+          CustomerServiceProfile(),
       ][_selectedIndex],
       bottomNavigationBar: CustomBottomNavigationBar(
         selectedIndex: _selectedIndex,

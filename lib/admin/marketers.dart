@@ -32,11 +32,9 @@ class _MarketersState extends State<Marketers> {
   }
 
   final List<String> userRoles = ['admin', 'marketer', 'customer service'];
-
   // Function to update the marketer's data in the database
   Future<void> updateMarketer(dynamic marketerData) async {
     try {
-      // Prepare the data to send in the request
       var data = {
         'id': marketerData['id'].toString(),
         'username': marketerData['username'],
@@ -81,15 +79,13 @@ class _MarketersState extends State<Marketers> {
     }
   }
 
-  // Function to show the AlertDialog for editing
   void editMarketerDetails(dynamic marketerData) {
-    // Create TextEditingController for other fields
     TextEditingController usernameController =
         TextEditingController(text: marketerData['username']);
     TextEditingController phoneController =
         TextEditingController(text: marketerData['phone']);
     TextEditingController emailController =
-        TextEditingController(text: marketerData['email']);
+    TextEditingController(text: marketerData['email']);
 
     // Initialize selectedUserRole with the current value
     String selectedUserRole = marketerData['userRole'];
@@ -160,7 +156,6 @@ class _MarketersState extends State<Marketers> {
   }
 
   Future<void> _refresh() async {
-    // Add any additional data fetching or refreshing logic here
     setState(() {});
   }
 

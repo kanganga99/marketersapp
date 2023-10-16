@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -7,9 +6,30 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:pesafy_marketer/main.dart';
 import 'package:pesafy_marketer/search.dart';
 import 'package:pesafy_marketer/views/home/sales.dart';
+import 'package:pesafy_marketer/views/home/user_assignment.dart';
 import 'add_clients3.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
+
+class User {
+  final String id;
+  final String username;
+  final String email;
+
+  User({
+    required this.id,
+    required this.username,
+    required this.email,
+  });
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      id: json['id'].toString(), // Parse 'id' as a string
+      username: json['username'],
+      email: json['email'],
+    );
+  }
+}
 
 class ViewClients extends StatefulWidget {
   const ViewClients(
@@ -22,6 +42,8 @@ class ViewClients extends StatefulWidget {
 }
 
 class _ViewClientsState extends State<ViewClients> {
+  var role = globalPrefs!.getString('userRole');
+
   Future<void> deleteEmployee(Employee employee) async {
     try {
       String uri = "https://api.pesafy.africa/marketers/delete_clients.php";
@@ -51,6 +73,65 @@ class _ViewClientsState extends State<ViewClients> {
       }
     } catch (e) {
       print(e);
+    }
+  }
+
+  Future<List<User>> fetchUsers() async {
+    final response = await http
+        .get(Uri.parse('http://api.pesafy.africa/marketers/get_users.php'));
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonList = jsonDecode(response.body);
+      final filteredJsonList = jsonList
+          .where((userJson) => userJson['userRole'] == 'customer service')
+          .toList();
+      final users =
+          filteredJsonList.map((userJson) => User.fromJson(userJson)).toList();
+      print(users);
+      return users;
+    } else {
+      throw Exception('Failed to load users');
+    }
+  }
+
+  Future<void> updateCustomerService(dynamic customerService) async {
+    try {
+      var data = {
+        'id': customerService['id'].toString(),
+        'user_assigned': customerService['user_assigned'],
+      };
+
+      var response = await http.post(
+        Uri.parse('https://api.pesafy.africa/marketers/customer_service.php'),
+        body: data,
+      );
+      print('Response Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
+      if (response.statusCode == 200) {
+        print('Update success');
+        Fluttertoast.showToast(
+          msg: "Customer Service Assigned",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM_RIGHT,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.blueGrey,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+        Navigator.pushNamed(context, "/");
+      } else {
+        Fluttertoast.showToast(
+          msg: "Assigning Customer Service Failed",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM_RIGHT,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+        print('Update failed');
+      }
+    } catch (e) {
+      print('Error: $e');
     }
   }
 
@@ -113,7 +194,6 @@ class _ViewClientsState extends State<ViewClients> {
 
   late SharedPreferences logindata;
   late String email;
-
   void initState() {
     super.initState();
     initial();
@@ -126,7 +206,10 @@ class _ViewClientsState extends State<ViewClients> {
     });
   }
 
+  Map customerService = {};
+
   @override
+  final userRole = globalPrefs!.getString('userRole')!;
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: Padding(
@@ -172,6 +255,10 @@ class _ViewClientsState extends State<ViewClients> {
                             onPressed: () {
                               logindata.setBool('login', true);
                               Navigator.pushNamed(context, "/");
+                              //  Navigator.push( context,
+                              //     MaterialPageRoute(
+                              //       builder: (context) => FormScreen(),
+                              //     ),
                             },
                           ),
                         ],
@@ -663,15 +750,146 @@ class _ViewClientsState extends State<ViewClients> {
                               },
                             ),
                           ),
-                          Positioned(
-                            bottom: 8.0,
-                            right: 8.0,
-                            child: TextButton(
-                              onPressed: () {},
-                              child: Text('Assign'),
-                              
+                          if (userRole == 'admin')
+                            Positioned(
+                              bottom: 8.0,
+                              right: 8.0,
+                              child: TextButton(
+                                onPressed: () async {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return Center(
+                                        child: SizedBox(
+                                          height: 300,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(16),
+                                            child: Material(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          16)),
+                                              child: Container(
+                                                width: double.infinity,
+                                                padding: EdgeInsets.all(16),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  color: Colors.white,
+                                                ),
+                                                child: Form(
+                                                  key: _formKey,
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        'Assign Customer Service',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      SizedBox(height: 10),
+                                                      TextFormField(
+                                                        keyboardType:
+                                                            TextInputType.text,
+                                                        controller:
+                                                            serviceController,
+                                                        onTap: () async {
+                                                          try {
+                                                            final usersList =
+                                                                await fetchUsers();
+                                                            final selectedUser =
+                                                                await Navigator.of(
+                                                                        context)
+                                                                    .push(
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (BuildContext
+                                                                        context) {
+                                                                  return UserAssignmentPage(
+                                                                      users:
+                                                                          usersList);
+                                                                },
+                                                              ),
+                                                            );
+
+                                                            if (selectedUser !=
+                                                                null) {
+                                                              serviceController
+                                                                      .text =
+                                                                  selectedUser
+                                                                      .username;
+                                                            }
+                                                          } catch (e) {
+                                                            print(
+                                                                'Error fetching users: $e');
+                                                          }
+                                                        },
+                                                        decoration:
+                                                            const InputDecoration(
+                                                          labelText:
+                                                              'Customer Service',
+                                                          border:
+                                                              OutlineInputBorder(),
+                                                          prefixIcon: Icon(
+                                                              Icons.person),
+                                                        ),
+                                                        validator: (value) {
+                                                          if (value == null ||
+                                                              value.isEmpty) {
+                                                            return 'Please enter customer service';
+                                                          } else
+                                                            return null;
+                                                        },
+                                                      ),
+                                                      SizedBox(
+                                                        height: 20,
+                                                      ),
+                                                      TextButton(
+                                                        child: Text('Save'),
+                                                        style: TextButton
+                                                            .styleFrom(
+                                                          backgroundColor:
+                                                              Colors.blueGrey,
+                                                          foregroundColor:
+                                                              Colors.white,
+                                                          fixedSize: Size(
+                                                              double.maxFinite,
+                                                              40),
+                                                        ),
+                                                        onPressed: () async {
+                                                          customerService[
+                                                                  'id'] =
+                                                              employee.id;
+                                                          customerService[
+                                                                  'user_assigned'] =
+                                                              serviceController
+                                                                  .text;
+                                                          await updateCustomerService(
+                                                            customerService,
+                                                          );
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                                child: Text('Assign'),
+                              ),
                             ),
-                          )
                         ],
                       );
                     },
@@ -755,11 +973,3 @@ class EmployeeDataSource extends DataTableSource {
   @override
   int get selectedRowCount => 0;
 }
-
-// class DatabaseHelper {
-//   static Future<http.Response> getData() async {
-//     String uri = "https://api.pesafy.africa/marketers/view_clients1.php";
-//     var res = await http.get(Uri.parse(uri));
-//     return res;
-//   }
-// }

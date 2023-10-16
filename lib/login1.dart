@@ -57,9 +57,9 @@ class _FormScreenState extends State<FormScreen> {
           logindata.setBool('login', false);
           logindata.setString('email', email.text);
           logindata.setInt('id', data['data']['id']); // Store user ID
-          logindata.setString('username', data['data']['username']); 
-          logindata.setString('phone', data['data']['phone']); 
-          logindata.setString('userRole', data['data']['userRole']); 
+          logindata.setString('username', data['data']['username']);
+          logindata.setString('phone', data['data']['phone']);
+          logindata.setString('userRole', data['data']['userRole']);
           Fluttertoast.showToast(
             msg: "Login Successful",
             toastLength: Toast.LENGTH_SHORT,
