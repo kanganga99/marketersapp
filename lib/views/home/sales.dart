@@ -53,8 +53,7 @@ class _SalesState extends State<Sales> {
       dynamic responseData = jsonDecode(response.body);
       List<dynamic> sales = responseData;
       int? uid = globalPrefs!.getInt('id');
-      List<dynamic> filteredSales =
-          sales.where((element) => element['uid'] == '$uid').toList();
+      List<dynamic> filteredSales = sales.where((element) => element['uid'] == '$uid').toList();
       double totalAmount = 0.0;
       for (var sale in filteredSales) {
         totalAmount += double.tryParse(sale['amount'].toString()) ?? 0.0;
