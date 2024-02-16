@@ -118,7 +118,7 @@ class _MarketersState extends State<Marketers> {
                   value: selectedUserRole,
                   onChanged: (newValue) {
                     setState(() {
-                      selectedUserRole = newValue!;   
+                      selectedUserRole = newValue!;
                     });
                   },
                   items: userRoles.map((role) {
@@ -178,7 +178,26 @@ class _MarketersState extends State<Marketers> {
               print('Error: ${snapshot.error}');
               return Center(child: Text('Error: ${snapshot.error}'));
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return Center(child: Text('No data available'));
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.assignment,
+                      size: 100,
+                      color: Colors.grey,
+                    ),
+                    Text(
+                      'No data available',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.grey,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              );
             } else {
               List<dynamic> marketersData = snapshot.data!;
               return ListView.builder(

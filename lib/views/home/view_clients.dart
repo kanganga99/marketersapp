@@ -367,15 +367,15 @@ class _ViewClientsState extends State<ViewClients> {
                                 ),
                                 ListTile(
                                   title: Center(
-                                    child: Text(
-                                      'ID: ${employee.id}',
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
+                                      // child: Text(
+                                      //   'ID: ${employee.id}',
+                                      //   style: const TextStyle(
+                                      //     fontSize: 16,
+                                      //     fontWeight: FontWeight.bold,
+                                      //   ),
+                                      //   textAlign: TextAlign.center,
+                                      // ),
                                       ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
                                   subtitle: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,

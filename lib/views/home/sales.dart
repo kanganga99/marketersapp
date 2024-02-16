@@ -12,9 +12,43 @@ class Sales extends StatefulWidget {
 }
 
 class _SalesState extends State<Sales> {
-  Future<double> getMarketerTotalSales() async {
+  DateTime? _startDate;
+  DateTime? _endDate;
+
+  Future<void> _selectDateRange(BuildContext context) async {
+    final picked = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now(),
+      initialDateRange: _startDate == null || _endDate == null
+          ? null
+          : DateTimeRange(start: _startDate!, end: _endDate!),
+    );
+
+    if (picked != null && picked.start != null && picked.end != null) {
+      setState(() {
+        _startDate = picked.start;
+        _endDate = picked.end;
+      });
+
+      try {
+        await getMarketerTotalSales(_startDate!, _endDate!);
+      } catch (error) {
+        print('Error selecting date range: $error');
+      }
+    }
+  }
+
+  Future<double> getMarketerTotalSales(
+      DateTime startDate, DateTime endDate) async {
     var url = 'https://api.pesafy.africa/marketers/view_sales.php';
-    var response = await http.get(Uri.parse(url));
+    var body = {
+      'start_date':
+          '${startDate.year}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}',
+      'end_date':
+          '${endDate.year}-${endDate.month.toString().padLeft(2, '0')}-${endDate.day.toString().padLeft(2, '0')}',
+    };
+    var response = await http.post(Uri.parse(url), body: body, headers: {});
     if (response.statusCode == 200) {
       dynamic responseData = jsonDecode(response.body);
       List<dynamic> sales = responseData;
@@ -39,9 +73,18 @@ class _SalesState extends State<Sales> {
         title: const Text('Sales Summary'),
         centerTitle: true,
         elevation: 1,
+        actions: [
+          IconButton(
+            onPressed: () => _selectDateRange(context),
+            icon: Icon(Icons.date_range),
+          ),
+        ],
       ),
       body: FutureBuilder<double>(
-        future: getMarketerTotalSales(),
+        future: getMarketerTotalSales(
+          _startDate ?? DateTime.now().subtract(Duration(days: 7)),
+          _endDate ?? DateTime.now(),
+        ),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
