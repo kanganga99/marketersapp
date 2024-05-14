@@ -92,7 +92,7 @@ class _FormScreenState extends State<FormScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false, // Remove the back icon
-        title: const Text('Pesafy Marketers'),
+        title: const Text('Pesafy Affiliate'),
         centerTitle: true,
       ),
       body: SingleChildScrollView(

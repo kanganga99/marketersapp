@@ -72,7 +72,7 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pesafy Marketers'),
+        title: const Text('Pesafy Affiliate'),
         centerTitle: true,
       ),
       body: SingleChildScrollView(

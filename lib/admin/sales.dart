@@ -177,13 +177,13 @@ class _AdminSalesState extends State<AdminSales> {
                 children: [
                   Icon(
                     Icons.assignment,
-                    size: 100,
+                    size: 48,
                     color: Colors.grey,
                   ),
                   Text(
                     'No data available',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 14,
                       color: Colors.grey,
                     ),
                     textAlign: TextAlign.center,

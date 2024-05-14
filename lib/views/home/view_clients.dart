@@ -345,430 +345,471 @@ class _ViewClientsState extends State<ViewClients> {
             onRefresh: _handleRefresh,
             child: widget.isLoading
                 ? const Center(child: CircularProgressIndicator())
-                : ListView.builder(
-                    itemCount: filteredEmployees.length,
-                    itemBuilder: (context, index) {
-                      final employee = filteredEmployees[index];
-                      final heroTag = ''
-                          'employee_hero_${employee.id}'; // Unique hero tag
-                      return Stack(
-                        children: [
-                          Card(
-                            margin: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                Hero(
-                                  tag: heroTag,
-                                  child: Image.asset(
-                                    'images/logoi.jpeg',
-                                    height: 100,
-                                    width: 100,
-                                  ),
-                                ),
-                                ListTile(
-                                  title: Center(
-                                      // child: Text(
-                                      //   'ID: ${employee.id}',
-                                      //   style: const TextStyle(
-                                      //     fontSize: 16,
-                                      //     fontWeight: FontWeight.bold,
-                                      //   ),
-                                      //   textAlign: TextAlign.center,
-                                      // ),
-                                      ),
-                                  subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(height: 8.0),
-                                      Center(
-                                        child: Text(
-                                          'Business Name: ${employee.businessName}',
-                                          style: const TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                      Center(
-                                        child: Text(
-                                          'Contact: ${employee.contact}',
-                                          style: const TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ),
-                                      Center(
-                                        child: Text(
-                                          'Location: ${employee.location}',
-                                          style: const TextStyle(
-                                            fontSize: 14,
-                                            // fontWeight: FontWeight.bold,
-                                            // color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                : filteredEmployees.isEmpty
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.assignment,
+                              size: 48.0,
+                              color: Colors.grey,
                             ),
-                          ),
-                          Positioned(
-                            top: 8.0,
-                            left: 8.0,
-                            child: IconButton(
-                              icon: const Icon(Icons.edit),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => AddedClients(
-                                      isEditing: true,
-                                      id: employee.id,
-                                      uid: globalPrefs!.getInt('id') ?? 0,
+                            SizedBox(height: 16.0),
+                            Text(
+                              'No data available yet',
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : ListView.builder(
+                        itemCount: filteredEmployees.length,
+                        itemBuilder: (context, index) {
+                          final employee = filteredEmployees[index];
+                          final heroTag = ''
+                              'employee_hero_${employee.id}'; // Unique hero tag
+                          return Stack(
+                            children: [
+                              Card(
+                                margin: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    Hero(
+                                      tag: heroTag,
+                                      child: Image.asset(
+                                        'images/logoi.jpeg',
+                                        height: 100,
+                                        width: 100,
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          Positioned(
-                            top: 8.0,
-                            right: 8.0,
-                            child: IconButton(
-                              icon: Icon(Icons.add),
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return Center(
-                                      child: SizedBox(
-                                        height: 420,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(16),
-                                          child: Material(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(16)),
-                                            child: Container(
-                                              width: double.infinity,
-                                              padding: EdgeInsets.all(16),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                                color: Colors.white,
+                                    ListTile(
+                                      title: Center(
+                                          // child: Text(
+                                          //   'ID: ${employee.id}',
+                                          //   style: const TextStyle(
+                                          //     fontSize: 16,
+                                          //     fontWeight: FontWeight.bold,
+                                          //   ),
+                                          //   textAlign: TextAlign.center,
+                                          // ),
+                                          ),
+                                      subtitle: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(height: 8.0),
+                                          Center(
+                                            child: Text(
+                                              'Business Name: ${employee.businessName}',
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
                                               ),
-                                              child: Form(
-                                                key: _formKey,
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      'Attach Sale',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                    SizedBox(height: 10),
-                                                    TextFormField(
-                                                      keyboardType:
-                                                          TextInputType.text,
-                                                      controller:
-                                                          serviceController,
-                                                      decoration:
-                                                          const InputDecoration(
-                                                        labelText: 'Service',
-                                                        border:
-                                                            OutlineInputBorder(),
-                                                        prefixIcon:
-                                                            Icon(Icons.nature),
-                                                      ),
-                                                      validator: (value) {
-                                                        if (value == null ||
-                                                            value.isEmpty) {
-                                                          return 'Please enter service sold';
-                                                        } else
-                                                          return null;
-                                                      },
-                                                    ),
-                                                    SizedBox(
-                                                      height: 10,
-                                                    ),
-                                                    TextFormField(
-                                                      keyboardType:
-                                                          TextInputType.text,
-                                                      controller:
-                                                          amountController,
-                                                      decoration:
-                                                          const InputDecoration(
-                                                        labelText: 'Amount',
-                                                        border:
-                                                            OutlineInputBorder(),
-                                                        prefixIcon:
-                                                            Icon(Icons.money),
-                                                      ),
-                                                      validator: (value) {
-                                                        if (value == null ||
-                                                            value.isEmpty) {
-                                                          return 'Please enter amount';
-                                                        } else
-                                                          return null;
-                                                      },
-                                                    ),
-                                                    SizedBox(
-                                                      height: 10,
-                                                    ),
-                                                    TextFormField(
-                                                      keyboardType:
-                                                          TextInputType.text,
-                                                      controller:
-                                                          transaction_codeController,
-                                                      decoration:
-                                                          const InputDecoration(
-                                                        labelText:
-                                                            'Transaction Code',
-                                                        border:
-                                                            OutlineInputBorder(),
-                                                        prefixIcon:
-                                                            Icon(Icons.code),
-                                                      ),
-                                                      validator: (value) {
-                                                        if (value == null ||
-                                                            value.isEmpty) {
-                                                          return 'Please enter transaction code';
-                                                        } else
-                                                          return null;
-                                                      },
-                                                    ),
-                                                    SizedBox(
-                                                      height: 10,
-                                                    ),
-                                                    TextButton(
-                                                      child: Text('Save'),
-                                                      style:
-                                                          TextButton.styleFrom(
-                                                        backgroundColor:
-                                                            Colors.blueGrey,
-                                                        foregroundColor:
-                                                            Colors.white,
-                                                        fixedSize: Size(
-                                                            double.maxFinite,
-                                                            20),
-                                                      ),
-                                                      onPressed: () async {
-                                                        if (_formKey
-                                                            .currentState!
-                                                            .validate()) {
-                                                          final service =
-                                                              serviceController
-                                                                  .text;
-                                                          final amount =
-                                                              amountController
-                                                                  .text;
-                                                          final transaction_code =
-                                                              transaction_codeController
-                                                                  .text;
-
-                                                          final response =
-                                                              await makeSale(
-                                                            service,
-                                                            amount,
-                                                            transaction_code,
-                                                          );
-
-                                                          if (response
-                                                                  .statusCode ==
-                                                              200) {
-                                                            showToast(
-                                                                'Sale Completed');
-                                                            print(
-                                                                'Form submitted successfully');
-                                                            Navigator.pushNamed(
-                                                                context, "/");
-                                                          } else {
-                                                            throw Exception(
-                                                                'Failed to submit form');
-                                                          }
-
-                                                          // Clear the form fields
-                                                          serviceController
-                                                              .clear();
-                                                          amountController
-                                                              .clear();
-                                                          transaction_codeController
-                                                              .clear();
-                                                          // }
-                                                        }
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                          Center(
+                                            child: Text(
+                                              'Contact: ${employee.contact}',
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
                                               ),
                                             ),
                                           ),
+                                          Center(
+                                            child: Text(
+                                              'Location: ${employee.location}',
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                // fontWeight: FontWeight.bold,
+                                                // color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Positioned(
+                                top: 8.0,
+                                left: 8.0,
+                                child: IconButton(
+                                  icon: const Icon(Icons.edit),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => AddedClients(
+                                          isEditing: true,
+                                          id: employee.id,
+                                          uid: globalPrefs!.getInt('id') ?? 0,
                                         ),
                                       ),
                                     );
                                   },
-                                );
-                              },
-                            ),
-                          ),
-                          if (userRole == 'admin')
-                            Positioned(
-                              bottom: 8.0,
-                              right: 8.0,
-                              child: TextButton(
-                                onPressed: () async {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return Center(
-                                        child: SizedBox(
-                                          height: 300,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(16),
-                                            child: Material(
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          16)),
-                                              child: Container(
-                                                width: double.infinity,
-                                                padding: EdgeInsets.all(16),
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                  color: Colors.white,
-                                                ),
-                                                child: Form(
-                                                  key: _formKey,
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        'Assign Customer Service',
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                      SizedBox(height: 10),
-                                                      TextFormField(
-                                                        keyboardType:
-                                                            TextInputType.text,
-                                                        controller:
-                                                            serviceController,
-                                                        onTap: () async {
-                                                          try {
-                                                            final usersList =
-                                                                await fetchUsers();
-                                                            final selectedUser =
-                                                                await Navigator.of(
-                                                                        context)
-                                                                    .push(
-                                                              MaterialPageRoute(
-                                                                builder:
-                                                                    (BuildContext
-                                                                        context) {
-                                                                  return UserAssignmentPage(
-                                                                      users:
-                                                                          usersList);
-                                                                },
-                                                              ),
-                                                            );
+                                ),
+                              ),
+                              Positioned(
+                                top: 8.0,
+                                right: 8.0,
+                                child: IconButton(
+                                  icon: Icon(Icons.add),
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return Center(
+                                          child: SizedBox(
+                                            height: 420,
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(16),
+                                              child: Material(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            16)),
+                                                child: Container(
+                                                  width: double.infinity,
+                                                  padding: EdgeInsets.all(16),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15),
+                                                    color: Colors.white,
+                                                  ),
+                                                  child: Form(
+                                                    key: _formKey,
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          'Attach Sale',
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        SizedBox(height: 10),
+                                                        TextFormField(
+                                                          keyboardType:
+                                                              TextInputType
+                                                                  .text,
+                                                          controller:
+                                                              serviceController,
+                                                          decoration:
+                                                              const InputDecoration(
+                                                            labelText:
+                                                                'Service',
+                                                            border:
+                                                                OutlineInputBorder(),
+                                                            prefixIcon: Icon(
+                                                                Icons.nature),
+                                                          ),
+                                                          validator: (value) {
+                                                            if (value == null ||
+                                                                value.isEmpty) {
+                                                              return 'Please enter service sold';
+                                                            } else
+                                                              return null;
+                                                          },
+                                                        ),
+                                                        SizedBox(
+                                                          height: 10,
+                                                        ),
+                                                        TextFormField(
+                                                          keyboardType:
+                                                              TextInputType
+                                                                  .text,
+                                                          controller:
+                                                              amountController,
+                                                          decoration:
+                                                              const InputDecoration(
+                                                            labelText: 'Amount',
+                                                            border:
+                                                                OutlineInputBorder(),
+                                                            prefixIcon: Icon(
+                                                                Icons.money),
+                                                          ),
+                                                          validator: (value) {
+                                                            if (value == null ||
+                                                                value.isEmpty) {
+                                                              return 'Please enter amount';
+                                                            } else
+                                                              return null;
+                                                          },
+                                                        ),
+                                                        SizedBox(
+                                                          height: 10,
+                                                        ),
+                                                        TextFormField(
+                                                          keyboardType:
+                                                              TextInputType
+                                                                  .text,
+                                                          controller:
+                                                              transaction_codeController,
+                                                          decoration:
+                                                              const InputDecoration(
+                                                            labelText:
+                                                                'Transaction Code',
+                                                            border:
+                                                                OutlineInputBorder(),
+                                                            prefixIcon: Icon(
+                                                                Icons.code),
+                                                          ),
+                                                          validator: (value) {
+                                                            if (value == null ||
+                                                                value.isEmpty) {
+                                                              return 'Please enter transaction code';
+                                                            } else
+                                                              return null;
+                                                          },
+                                                        ),
+                                                        SizedBox(
+                                                          height: 10,
+                                                        ),
+                                                        TextButton(
+                                                          child: Text('Save'),
+                                                          style: TextButton
+                                                              .styleFrom(
+                                                            backgroundColor:
+                                                                Colors.blueGrey,
+                                                            foregroundColor:
+                                                                Colors.white,
+                                                            fixedSize: Size(
+                                                                double
+                                                                    .maxFinite,
+                                                                20),
+                                                          ),
+                                                          onPressed: () async {
+                                                            if (_formKey
+                                                                .currentState!
+                                                                .validate()) {
+                                                              final service =
+                                                                  serviceController
+                                                                      .text;
+                                                              final amount =
+                                                                  amountController
+                                                                      .text;
+                                                              final transaction_code =
+                                                                  transaction_codeController
+                                                                      .text;
 
-                                                            if (selectedUser !=
-                                                                null) {
+                                                              final response =
+                                                                  await makeSale(
+                                                                service,
+                                                                amount,
+                                                                transaction_code,
+                                                              );
+
+                                                              if (response
+                                                                      .statusCode ==
+                                                                  200) {
+                                                                showToast(
+                                                                    'Sale Completed');
+                                                                print(
+                                                                    'Form submitted successfully');
+                                                                Navigator
+                                                                    .pushNamed(
+                                                                        context,
+                                                                        "/");
+                                                              } else {
+                                                                throw Exception(
+                                                                    'Failed to submit form');
+                                                              }
+
+                                                              // Clear the form fields
                                                               serviceController
-                                                                      .text =
-                                                                  selectedUser
-                                                                      .username;
+                                                                  .clear();
+                                                              amountController
+                                                                  .clear();
+                                                              transaction_codeController
+                                                                  .clear();
+                                                              // }
                                                             }
-                                                          } catch (e) {
-                                                            print(
-                                                                'Error fetching users: $e');
-                                                          }
-                                                        },
-                                                        decoration:
-                                                            const InputDecoration(
-                                                          labelText:
-                                                              'Customer Service',
-                                                          border:
-                                                              OutlineInputBorder(),
-                                                          prefixIcon: Icon(
-                                                              Icons.person),
+                                                          },
                                                         ),
-                                                        validator: (value) {
-                                                          if (value == null ||
-                                                              value.isEmpty) {
-                                                            return 'Please enter customer service';
-                                                          } else
-                                                            return null;
-                                                        },
-                                                      ),
-                                                      SizedBox(
-                                                        height: 20,
-                                                      ),
-                                                      TextButton(
-                                                        child: Text('Save'),
-                                                        style: TextButton
-                                                            .styleFrom(
-                                                          backgroundColor:
-                                                              Colors.blueGrey,
-                                                          foregroundColor:
-                                                              Colors.white,
-                                                          fixedSize: Size(
-                                                              double.maxFinite,
-                                                              40),
-                                                        ),
-                                                        onPressed: () async {
-                                                          customerService[
-                                                                  'id'] =
-                                                              employee.id;
-                                                          customerService[
-                                                                  'user_assigned'] =
-                                                              serviceController
-                                                                  .text;
-                                                          await updateCustomerService(
-                                                            customerService,
-                                                          );
-                                                        },
-                                                      ),
-                                                    ],
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                              if (userRole == 'admin')
+                                Positioned(
+                                  bottom: 8.0,
+                                  right: 8.0,
+                                  child: TextButton(
+                                    onPressed: () async {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return Center(
+                                            child: SizedBox(
+                                              height: 300,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(16),
+                                                child: Material(
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              16)),
+                                                  child: Container(
+                                                    width: double.infinity,
+                                                    padding: EdgeInsets.all(16),
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15),
+                                                      color: Colors.white,
+                                                    ),
+                                                    child: Form(
+                                                      key: _formKey,
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                            'Assign Customer Service',
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          SizedBox(height: 10),
+                                                          TextFormField(
+                                                            keyboardType:
+                                                                TextInputType
+                                                                    .text,
+                                                            controller:
+                                                                serviceController,
+                                                            onTap: () async {
+                                                              try {
+                                                                final usersList =
+                                                                    await fetchUsers();
+                                                                final selectedUser =
+                                                                    await Navigator.of(
+                                                                            context)
+                                                                        .push(
+                                                                  MaterialPageRoute(
+                                                                    builder:
+                                                                        (BuildContext
+                                                                            context) {
+                                                                      return UserAssignmentPage(
+                                                                          users:
+                                                                              usersList);
+                                                                    },
+                                                                  ),
+                                                                );
+
+                                                                if (selectedUser !=
+                                                                    null) {
+                                                                  serviceController
+                                                                          .text =
+                                                                      selectedUser
+                                                                          .username;
+                                                                }
+                                                              } catch (e) {
+                                                                print(
+                                                                    'Error fetching users: $e');
+                                                              }
+                                                            },
+                                                            decoration:
+                                                                const InputDecoration(
+                                                              labelText:
+                                                                  'Customer Service',
+                                                              border:
+                                                                  OutlineInputBorder(),
+                                                              prefixIcon: Icon(
+                                                                  Icons.person),
+                                                            ),
+                                                            validator: (value) {
+                                                              if (value ==
+                                                                      null ||
+                                                                  value
+                                                                      .isEmpty) {
+                                                                return 'Please enter customer service';
+                                                              } else
+                                                                return null;
+                                                            },
+                                                          ),
+                                                          SizedBox(
+                                                            height: 20,
+                                                          ),
+                                                          TextButton(
+                                                            child: Text('Save'),
+                                                            style: TextButton
+                                                                .styleFrom(
+                                                              backgroundColor:
+                                                                  Colors
+                                                                      .blueGrey,
+                                                              foregroundColor:
+                                                                  Colors.white,
+                                                              fixedSize: Size(
+                                                                  double
+                                                                      .maxFinite,
+                                                                  40),
+                                                            ),
+                                                            onPressed:
+                                                                () async {
+                                                              customerService[
+                                                                      'id'] =
+                                                                  employee.id;
+                                                              customerService[
+                                                                      'user_assigned'] =
+                                                                  serviceController
+                                                                      .text;
+                                                              await updateCustomerService(
+                                                                customerService,
+                                                              );
+                                                            },
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
                                       );
                                     },
-                                  );
-                                },
-                                child: Text('Assign'),
-                              ),
-                            ),
-                        ],
-                      );
-                    },
-                  ),
+                                    child: Text('Assign'),
+                                  ),
+                                ),
+                            ],
+                          );
+                        },
+                      ),
           ),
         ),
       ]),

@@ -68,7 +68,7 @@ class _FormScreenState extends State<FormScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false, // Remove the back icon
-        title: const Text('Pesafy Marketers'),
+        title: const Text('Pesafy Affiliate'),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -93,8 +93,13 @@ class _FormScreenState extends State<FormScreen> {
                   controller: email,
                   decoration: const InputDecoration(
                     labelText: 'Email',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.email),
+                    labelStyle: TextStyle(color: Colors.black),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blueGrey),
+                    ),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {

@@ -79,9 +79,9 @@ class _AllBreakDownState extends State<AllBreakDown> {
       ),
       body: FutureBuilder<List<dynamic>>(
         future: getAllBreakdown(
-            _startDate ?? DateTime.now().subtract(Duration(days: 7)),
-            _endDate ?? DateTime.now(),
-            ),
+          _startDate ?? DateTime.now().subtract(Duration(days: 7)),
+          _endDate ?? DateTime.now(),
+        ),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -95,13 +95,13 @@ class _AllBreakDownState extends State<AllBreakDown> {
                 children: [
                   Icon(
                     Icons.assignment,
-                    size: 100,
+                    size: 48,
                     color: Colors.grey,
                   ),
                   Text(
-                    'No data available',
+                    'No data available yet',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 16,
                       color: Colors.grey,
                     ),
                     textAlign: TextAlign.center,

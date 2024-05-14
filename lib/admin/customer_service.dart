@@ -31,7 +31,6 @@ class _CustomerServiceState extends State<CustomerService> {
     }
   }
 
-  // Function to update the marketer's data in the database
   Future<void> _refresh() async {
     setState(() {});
   }

@@ -24,7 +24,7 @@ class MarketersApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.blueGrey),
-      title: 'Pesafy Affiliates',
+      title: 'Affiliate',
       initialRoute: '/',
       onGenerateRoute: (settings) {
         switch (settings.name) {

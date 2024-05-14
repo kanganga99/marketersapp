@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'package:http/http.dart' as http;
-// import 'dart:convert';
 import 'package:pesafy_marketer/main.dart';
 import 'package:pesafy_marketer/views/profile/marketerclients_summary.dart';
 import 'package:pesafy_marketer/views/profile/marketersales.dart';
@@ -54,7 +52,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 10),
             _buildDetailsCard(),
             const SizedBox(height: 10),
-            _buildClickableCard(),
+            _buildSalesBreakDownCard(),
             SizedBox(height: 10),
             _buildClientsSummary(),
           ],
@@ -93,7 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildClickableCard() {
+  Widget _buildSalesBreakDownCard() {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       child: InkWell(
